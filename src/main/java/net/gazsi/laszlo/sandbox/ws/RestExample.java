@@ -17,10 +17,4 @@ public class RestExample {
         return new Recipe("WENdfdgDY", 12);
     }
 
-//    @GET
-//    @Path("adam/{id}")
-//    public String sayAdam(@PathParam("id") int id) {
-//        return "Adam has id " + id;
-//    }
-
 }
