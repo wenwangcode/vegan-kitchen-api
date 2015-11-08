@@ -2,6 +2,7 @@ package application;
 
 import net.gazsi.laszlo.sandbox.ws.RestExample;
 
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.Set;
 /**
  * Created by wendywang on 2015-11-07.
  */
+@ApplicationPath("rest")
 public class MyApplication extends Application{
 
     @Override
