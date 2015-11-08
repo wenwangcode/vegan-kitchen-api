@@ -7,20 +7,20 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-@Path("hello")
+@Path("recipe")
 public class RestExample {
 
+
     @GET
-    @Path("/adam")
+    @Path("{id}")
     @Produces("application/json")
-    public Recipe sayHello(){
-        return new Recipe("WENdfdgDY", 12);
+    public Recipe sayHello(@PathParam("id") int id){
+       // RecipeManager manager = new MockRecipeManager();
+        //return manager.getRecipeByID(id);
+        return new Recipe("Dishname", 123, "imageURL", 1, "String summary");
+
     }
 
-//    @GET
-//    @Path("adam/{id}")
-//    public String sayAdam(@PathParam("id") int id) {
-//        return "Adam has id " + id;
-//    }
+
 
 }

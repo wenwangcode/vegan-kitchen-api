@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by wendywang on 2015-11-07.
  */
-@ApplicationPath("rest")
+@ApplicationPath("/")
 public class MyApplication extends Application{
 
     @Override
