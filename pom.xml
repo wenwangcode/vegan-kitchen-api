@@ -15,6 +15,8 @@
         <jersey.version>2.8</jersey.version>
         <jackson.version>2.3.3</jackson.version>
         <junit.version>4.12</junit.version>
+        <jayway.version>2.1.0</jayway.version>
+        <codehaus.version>2.2.0</codehaus.version>
     </properties>
 
     <repositories>
@@ -67,6 +69,22 @@
             <version>5.1.37</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${jayway.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${codehaus.version}</version>
         </dependency>
     </dependencies>
 
