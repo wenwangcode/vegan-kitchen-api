@@ -1,6 +1,5 @@
-package net.gazsi.laszlo.sandbox.ws;
+package rest.api;
 
-import database.utility.ConnectionFactory;
 import manager.RecipeManager;
 import model.Recipe;
 
@@ -8,7 +7,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,7 +14,6 @@ import java.util.List;
 public class RecipeResource {
 
     RecipeManager recipeManager = new RecipeManager();
-
 
     @GET
     @Path("/all")
@@ -31,8 +28,5 @@ public class RecipeResource {
     public Recipe getRecipeById(@PathParam("recipe_id") int recipeId) throws SQLException {
         return recipeManager.getRecipeByID(recipeId);
     }
-
-
-
 
 }

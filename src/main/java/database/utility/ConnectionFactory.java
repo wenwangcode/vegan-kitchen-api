@@ -1,5 +1,7 @@
 package database.utility;
 
+import application.MyApplication;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -8,20 +10,21 @@ import java.sql.DriverManager;
  *
  * Be able to connect the database
  */
-
-
 public class ConnectionFactory {
+
+    private static final String connectionUrl = MyApplication.properties.getProperty("mysql_url");
+    private static final String mysqlConnectorDriver = MyApplication.properties.getProperty("mysql_connector_driver");
+    private static final String mysqlUser = MyApplication.properties.getProperty("mysql_user");
+    private static final String mysqlPassword = MyApplication.properties.getProperty("mysql_password");
 
     public static Connection getConnection() throws Exception{
         try{
-            String connectionURL = "jdbc:mysql://localhost:3306/vegan_kitchen_api";
-            Connection connection = null;
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(connectionURL, "root", "abcde");
-            return connection;
+            Class.forName(mysqlConnectorDriver).newInstance();
+            return DriverManager.getConnection(connectionUrl, mysqlUser, mysqlPassword);
         }
-        catch (Exception e){
-            throw e;
+        catch (Exception exception){
+            exception.printStackTrace();
+            throw exception;
         }
     }
 
