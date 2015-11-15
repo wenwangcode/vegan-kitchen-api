@@ -1,6 +1,6 @@
 package application;
 
-import net.gazsi.laszlo.sandbox.ws.RestExample;
+import net.gazsi.laszlo.sandbox.ws.RecipeResource;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -16,7 +16,7 @@ public class MyApplication extends Application{
     @Override
     public Set<Class<?>> getClasses(){
         Set<Class<?>> s = new HashSet<Class<?>>();
-        s.add(RestExample.class);
+        s.add(RecipeResource.class);
         return s;
     }
 
