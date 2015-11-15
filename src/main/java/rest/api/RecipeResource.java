@@ -1,12 +1,12 @@
 package rest.api;
 
+import factory.response.ResponseFactory;
 import manager.RecipeManager;
 import model.Recipe;
+import validator.UserValidator;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -27,6 +27,15 @@ public class RecipeResource {
     @Produces("application/json")
     public Recipe getRecipeById(@PathParam("recipe_id") int recipeId) throws SQLException {
         return recipeManager.getRecipeByID(recipeId);
+    }
+
+    @POST
+    @Path("/user/{user_id}")
+    @Consumes("application/json")
+    public Response createRecipe(@PathParam("user_id") int userId, @HeaderParam("Authorization") String authorization, Recipe recipe) throws Exception {
+        // verify user
+        boolean validation = UserValidator.validate(userId, authorization);
+        return ResponseFactory.buildResponse(validation, recipe);
     }
 
 }

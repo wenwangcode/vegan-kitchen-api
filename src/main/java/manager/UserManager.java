@@ -1,6 +1,6 @@
 package manager;
 
-import database.utility.ConnectionFactory;
+import factory.database.ConnectionFactory;
 import model.User;
 
 import java.sql.Connection;
