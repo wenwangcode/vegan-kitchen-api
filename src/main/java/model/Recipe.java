@@ -11,17 +11,19 @@ public class Recipe {
     private String dishName;
     private int id;
     private String imageURL;
-    private int servingSize;
+    private String servingSize;
     private String summary;
+    private int authorUserID;
 
     public Recipe(){} // JAXB needs this
 
-    public Recipe(String dishName, int id, String imageURL, int servingSize, String summary){
+    public Recipe(String dishName, int id, String imageURL, String servingSize, String summary, int authorUserID){
         this.dishName = dishName;
         this.id = id;
         this.imageURL = imageURL;
         this.servingSize = servingSize;
         this.summary = summary;
+        this.authorUserID = authorUserID;
     }
 
 
@@ -49,11 +51,11 @@ public class Recipe {
         this.imageURL = imageURL;
     }
 
-    public int getServingSize() {
+    public String getServingSize() {
         return servingSize;
     }
 
-    public void setServingSize(int servingSize) {
+    public void setServingSize(String servingSize) {
         this.servingSize = servingSize;
     }
 
@@ -63,5 +65,13 @@ public class Recipe {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public int getAuthorUserID(){
+        return authorUserID;
+    }
+
+    public void setAuthorUserID(int authorUserID){
+        this.authorUserID = authorUserID;
     }
 }

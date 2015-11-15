@@ -5,7 +5,11 @@ import java.sql.DriverManager;
 
 /**
  * Created by wendywang on 2015-11-08.
+ *
+ * Be able to connect the database
  */
+
+
 public class ConnectionFactory {
 
     public static Connection getConnection() throws Exception{
