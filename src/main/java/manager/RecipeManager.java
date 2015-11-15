@@ -20,7 +20,7 @@ public class RecipeManager {
 
     }
     public ArrayList<Recipe> getRecipes() throws SQLException {
-        ArrayList<Recipe> recipeArrayList = new ArrayList<>();
+        ArrayList<Recipe> recipeArrayList = new ArrayList<Recipe>();
 
         //it will close the query after the try block
         try (Connection connection = ConnectionFactory.getConnection()) {
