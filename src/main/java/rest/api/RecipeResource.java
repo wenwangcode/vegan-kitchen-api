@@ -7,7 +7,6 @@ import validator.UserValidator;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 import java.util.List;
 
 @Path("recipe")
@@ -25,7 +24,7 @@ public class RecipeResource {
     @GET
     @Path("/{recipe_id}")
     @Produces("application/json")
-    public Recipe getRecipeById(@PathParam("recipe_id") int recipeId) throws SQLException {
+    public Recipe getRecipeById(@PathParam("recipe_id") int recipeId) throws Exception {
         return recipeManager.getRecipeByID(recipeId);
     }
 
@@ -35,7 +34,7 @@ public class RecipeResource {
     public Response createRecipe(@PathParam("user_id") int userId, @HeaderParam("Authorization") String authorization, Recipe recipe) throws Exception {
         // verify user
         boolean validation = UserValidator.validate(userId, authorization);
-        return ResponseFactory.buildResponse(validation, recipe);
+        return ResponseFactory.buildResponse(validation, recipeManager.addRecipe(recipe));
     }
 
 }

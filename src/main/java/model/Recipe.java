@@ -1,77 +1,95 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by wendywang on 2015-11-07.
  */
 @XmlRootElement
-public class Recipe {
+public class Recipe extends model.mapping.tables.pojos.Recipe{
 
-    private String dishName;
-    private int id;
-    private String imageURL;
-    private String servingSize;
-    private String summary;
-    private int authorUserID;
+    public Recipe(){};
 
-    public Recipe(){} // JAXB needs this
-
-    public Recipe(String dishName, int id, String imageURL, String servingSize, String summary, int authorUserID){
-        this.dishName = dishName;
-        this.id = id;
-        this.imageURL = imageURL;
-        this.servingSize = servingSize;
-        this.summary = summary;
-        this.authorUserID = authorUserID;
+    public Recipe(Integer recipeId, String dishName, String summary, String servingSize, String dishImageUrl, int authorUserId) {
+        setRecipeId(recipeId);
+        setDishName(dishName);
+        setSummary(summary);
+        setServing(servingSize);
+        setDishImageUrl(dishImageUrl);
+        setAuthorUserId(authorUserId);
     }
 
+    @Override
+    @JsonProperty("recipe_id")
+    public Integer getRecipeId() {
+        return super.getRecipeId();
+    }
 
+    @Override
+    @JsonProperty("recipe_id")
+    public void setRecipeId(Integer recipeId) {
+        super.setRecipeId(recipeId);
+    }
+
+    @Override
+    @JsonProperty("dish_name")
     public String getDishName() {
-        return dishName;
+        return super.getDishName();
     }
 
+    @Override
+    @JsonProperty("dish_name")
     public void setDishName(String dishName) {
-        this.dishName = dishName;
+        super.setDishName(dishName);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
-    public String getServingSize() {
-        return servingSize;
-    }
-
-    public void setServingSize(String servingSize) {
-        this.servingSize = servingSize;
-    }
-
+    @Override
+    @JsonProperty("summary")
     public String getSummary() {
-        return summary;
+        return super.getSummary();
     }
 
+    @Override
+    @JsonProperty("summary")
     public void setSummary(String summary) {
-        this.summary = summary;
+        super.setSummary(summary);
     }
 
-    public int getAuthorUserID(){
-        return authorUserID;
+    @Override
+    @JsonProperty("serving")
+    public String getServing() {
+        return super.getServing();
     }
 
-    public void setAuthorUserID(int authorUserID){
-        this.authorUserID = authorUserID;
+    @Override
+    @JsonProperty("serving")
+    public void setServing(String serving) {
+        super.setServing(serving);
+    }
+
+    @Override
+    @JsonProperty("dish_image_url")
+    public String getDishImageUrl() {
+        return super.getDishImageUrl();
+    }
+
+    @Override
+    @JsonProperty("dish_image_url")
+    public void setDishImageUrl(String dishImageURL) {
+        super.setDishImageUrl(dishImageURL);
+    }
+
+    @Override
+    @JsonProperty("author_id")
+    public Integer getAuthorUserId(){
+        return super.getAuthorUserId();
+    }
+
+    @Override
+    @JsonProperty("author_id")
+    public void setAuthorUserId(Integer authorUserID){
+        super.setAuthorUserId(authorUserID);
     }
 }
