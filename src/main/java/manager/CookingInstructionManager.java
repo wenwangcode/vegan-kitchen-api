@@ -15,12 +15,12 @@ import java.util.ArrayList;
 public class CookingInstructionManager
 
 {
-        public ArrayList<CookingInstruction> getCookingInstructions(Connection con) throws SQLException
+     public ArrayList<CookingInstruction> getCookingInstructions() throws SQLException
         {
             ArrayList<CookingInstruction> cookingInstructions = new ArrayList<CookingInstruction>();
             try (Connection connection = ConnectionFactory.getConnection())
             {
-                PreparedStatement stmt = con.prepareStatement("SELECT * FROM cooking_instruction");
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM cooking_instruction");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()){
                     CookingInstruction cookingInstructionObj = new CookingInstruction();
@@ -37,4 +37,31 @@ public class CookingInstructionManager
             }
             return cookingInstructions;
         }
+    public CookingInstruction getCookingInstructionByID(int recipeID) throws SQLException
+    {
+        CookingInstruction cookingInstruction = new CookingInstruction();
+        try(Connection connection = ConnectionFactory.getConnection())
+        {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM cooking_instruction WHERE recipe_id = ?");
+            stmt.setInt(1, recipeID);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next())
+            {
+                CookingInstruction cookingInstructionObj = new CookingInstruction();
+                cookingInstructionObj.setInstruction(rs.getString("instruction"));
+                cookingInstructionObj.setInstructionID(rs.getInt("instruction_id"));
+                cookingInstructionObj.setRecipeID(rs.getInt("recipe_id"));
+                cookingInstructionObj.setImageURL((rs.getString("image_url")));
+                cookingInstruction = cookingInstructionObj;
+
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return cookingInstruction;
+    }
+
 }
