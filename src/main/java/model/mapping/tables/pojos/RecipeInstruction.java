@@ -22,10 +22,11 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipeInstruction implements Serializable {
 
-	private static final long serialVersionUID = -1331902274;
+	private static final long serialVersionUID = -2098459428;
 
 	private Integer recipeId;
 	private Integer instructionId;
+	private Integer stepNumber;
 	private String  instruction;
 	private String  imageUrl;
 
@@ -34,6 +35,7 @@ public class RecipeInstruction implements Serializable {
 	public RecipeInstruction(RecipeInstruction value) {
 		this.recipeId = value.recipeId;
 		this.instructionId = value.instructionId;
+		this.stepNumber = value.stepNumber;
 		this.instruction = value.instruction;
 		this.imageUrl = value.imageUrl;
 	}
@@ -41,11 +43,13 @@ public class RecipeInstruction implements Serializable {
 	public RecipeInstruction(
 		Integer recipeId,
 		Integer instructionId,
+		Integer stepNumber,
 		String  instruction,
 		String  imageUrl
 	) {
 		this.recipeId = recipeId;
 		this.instructionId = instructionId;
+		this.stepNumber = stepNumber;
 		this.instruction = instruction;
 		this.imageUrl = imageUrl;
 	}
@@ -64,6 +68,14 @@ public class RecipeInstruction implements Serializable {
 
 	public void setInstructionId(Integer instructionId) {
 		this.instructionId = instructionId;
+	}
+
+	public Integer getStepNumber() {
+		return this.stepNumber;
+	}
+
+	public void setStepNumber(Integer stepNumber) {
+		this.stepNumber = stepNumber;
 	}
 
 	public String getInstruction() {
@@ -88,6 +100,7 @@ public class RecipeInstruction implements Serializable {
 
 		sb.append(recipeId);
 		sb.append(", ").append(instructionId);
+		sb.append(", ").append(stepNumber);
 		sb.append(", ").append(instruction);
 		sb.append(", ").append(imageUrl);
 

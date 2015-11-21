@@ -29,11 +29,11 @@ public class RecipeResource {
     }
 
     @POST
-    @Path("/user/{user_id}")
+    @Path("/")
     @Consumes("application/json")
-    public Response createRecipe(@PathParam("user_id") int userId, @HeaderParam("Authorization") String authorization, Recipe recipe) throws Exception {
-        // verify user
-        boolean validation = UserValidator.validate(userId, authorization);
+    @Produces("application/json")
+    public Response createRecipe(@HeaderParam("Authorization") String authorization, Recipe recipe) throws Exception {
+        boolean validation = UserValidator.validate(authorization);
         return ResponseFactory.buildResponse(validation, recipeManager.addRecipe(recipe));
     }
 

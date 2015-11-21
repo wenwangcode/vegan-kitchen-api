@@ -3,12 +3,16 @@ package model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wendywang on 2015-11-07.
  */
 @XmlRootElement
 public class Recipe extends model.mapping.tables.pojos.Recipe{
+
+    List<RecipeInstruction> recipeInstructionList = new ArrayList<>();
 
     public Recipe(){};
 
@@ -31,6 +35,16 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
     @JsonProperty("recipe_id")
     public void setRecipeId(Integer recipeId) {
         super.setRecipeId(recipeId);
+        setRecipeIdToRecipeInstructionList();
+    }
+
+    /**
+     * set recipe id to the associated recipe instruction list
+     */
+    private void setRecipeIdToRecipeInstructionList() {
+        for (RecipeInstruction instruction: recipeInstructionList) {
+            instruction.setRecipeId(getRecipeId());
+        }
     }
 
     @Override
@@ -91,5 +105,19 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
     @JsonProperty("author_id")
     public void setAuthorUserId(Integer authorUserID){
         super.setAuthorUserId(authorUserID);
+    }
+
+    @JsonProperty("recipe_instructions")
+    public List<RecipeInstruction> getRecipeInstructionList() {
+        return this.recipeInstructionList;
+    }
+
+    @JsonProperty("recipe_instructions")
+    public void setRecipeInstructionList(List<RecipeInstruction> recipeInstructionList) {
+        this.recipeInstructionList = recipeInstructionList;
+    }
+
+    public void addRecipeInstructions(RecipeInstruction recipeInstruction) {
+        this.recipeInstructionList.add(recipeInstruction);
     }
 }

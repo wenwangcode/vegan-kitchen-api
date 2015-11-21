@@ -8,7 +8,6 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 import static model.mapping.tables.RecipeTable.RECIPE;
@@ -19,28 +18,28 @@ import static model.mapping.tables.RecipeTable.RECIPE;
 
 public class RecipeManager {
 
+    RecipeInstructionManager recipeInstructionManager = new RecipeInstructionManager();
+
     public List<Recipe> getRecipes() throws Exception {
-        List<Recipe> recipeList = new ArrayList<Recipe>();
         try (Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            recipeList = create.select().from(RECIPE).fetchInto(Recipe.class);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw exception;
+            List<Recipe> recipeList = create.select().from(RECIPE).fetchInto(Recipe.class);
+            attachRecipeInstruction(recipeList);
+            return recipeList;
         }
-        return recipeList;
+    }
+
+    private void attachRecipeInstruction(List<Recipe> recipeList) throws Exception {
+        for (Recipe recipe: recipeList) {
+            recipe.setRecipeInstructionList(recipeInstructionManager.getRecipeInstructionListByRecipeId(recipe.getRecipeId()));
+        }
     }
 
     public Recipe getRecipeByID(int recipeID) throws Exception {
-        Recipe recipe = null;
         try(Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            recipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeID)).fetchAny().into(Recipe.class);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw exception;
+            return create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeID)).fetchAny().into(Recipe.class);
         }
-        return recipe;
     }
 
     public Recipe addRecipe(Recipe recipe) throws Exception {
@@ -48,12 +47,9 @@ public class RecipeManager {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw exception;
+            recipe.setRecipeId(recipeRecord.getRecipeId());
         }
         return recipe;
     }
-
 
 }
