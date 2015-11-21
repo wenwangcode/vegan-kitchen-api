@@ -8,6 +8,7 @@ CREATE TABLE recipe (
   serving VARCHAR(50) NOT NULL,
   dish_image_url VARCHAR(255) NOT NULL,
   author_user_id INT NOT NULL,
+  ingredient_id INT NOT NULL,
   PRIMARY KEY (recipe_id)
 );
 CREATE TABLE recipe_instruction (

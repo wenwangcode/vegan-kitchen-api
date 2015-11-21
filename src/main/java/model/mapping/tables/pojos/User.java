@@ -22,13 +22,13 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User implements Serializable {
 
-	private static final long serialVersionUID = -83820147;
+	private static final long serialVersionUID = 479400334;
 
 	private Integer userId;
 	private String  userName;
 	private String  email;
 	private String  password;
-	private Byte    isBlock;
+	private Byte    isBlocked;
 
 	public User() {}
 
@@ -37,7 +37,7 @@ public class User implements Serializable {
 		this.userName = value.userName;
 		this.email = value.email;
 		this.password = value.password;
-		this.isBlock = value.isBlock;
+		this.isBlocked = value.isBlocked;
 	}
 
 	public User(
@@ -45,13 +45,13 @@ public class User implements Serializable {
 		String  userName,
 		String  email,
 		String  password,
-		Byte    isBlock
+		Byte    isBlocked
 	) {
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
-		this.isBlock = isBlock;
+		this.isBlocked = isBlocked;
 	}
 
 	public Integer getUserId() {
@@ -86,12 +86,12 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Byte getIsBlock() {
-		return this.isBlock;
+	public Byte getIsBlocked() {
+		return this.isBlocked;
 	}
 
-	public void setIsBlock(Byte isBlock) {
-		this.isBlock = isBlock;
+	public void setIsBlocked(Byte isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class User implements Serializable {
 		sb.append(", ").append(userName);
 		sb.append(", ").append(email);
 		sb.append(", ").append(password);
-		sb.append(", ").append(isBlock);
+		sb.append(", ").append(isBlocked);
 
 		sb.append(")");
 		return sb.toString();

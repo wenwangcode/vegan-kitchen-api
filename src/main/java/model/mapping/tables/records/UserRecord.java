@@ -28,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Record5<Integer, String, String, String, Byte> {
 
-	private static final long serialVersionUID = -978167377;
+	private static final long serialVersionUID = 1922463886;
 
 	/**
 	 * Setter for <code>vegan_kitchen_api.user.user_id</code>.
@@ -87,16 +87,16 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 	}
 
 	/**
-	 * Setter for <code>vegan_kitchen_api.user.is_block</code>.
+	 * Setter for <code>vegan_kitchen_api.user.is_blocked</code>.
 	 */
-	public void setIsBlock(Byte value) {
+	public void setIsBlocked(Byte value) {
 		setValue(4, value);
 	}
 
 	/**
-	 * Getter for <code>vegan_kitchen_api.user.is_block</code>.
+	 * Getter for <code>vegan_kitchen_api.user.is_blocked</code>.
 	 */
-	public Byte getIsBlock() {
+	public Byte getIsBlocked() {
 		return (Byte) getValue(4);
 	}
 
@@ -169,7 +169,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 	 */
 	@Override
 	public Field<Byte> field5() {
-		return UserTable.USER.IS_BLOCK;
+		return UserTable.USER.IS_BLOCKED;
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 	 */
 	@Override
 	public Byte value5() {
-		return getIsBlock();
+		return getIsBlocked();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 	 */
 	@Override
 	public UserRecord value5(Byte value) {
-		setIsBlock(value);
+		setIsBlocked(value);
 		return this;
 	}
 
@@ -284,13 +284,13 @@ public class UserRecord extends UpdatableRecordImpl<UserRecord> implements Recor
 	/**
 	 * Create a detached, initialised UserRecord
 	 */
-	public UserRecord(Integer userId, String userName, String email, String password, Byte isBlock) {
+	public UserRecord(Integer userId, String userName, String email, String password, Byte isBlocked) {
 		super(UserTable.USER);
 
 		setValue(0, userId);
 		setValue(1, userName);
 		setValue(2, email);
 		setValue(3, password);
-		setValue(4, isBlock);
+		setValue(4, isBlocked);
 	}
 }

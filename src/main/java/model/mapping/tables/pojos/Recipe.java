@@ -22,7 +22,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Recipe implements Serializable {
 
-	private static final long serialVersionUID = 1895554309;
+	private static final long serialVersionUID = 972858286;
 
 	private Integer recipeId;
 	private String  dishName;
@@ -30,6 +30,7 @@ public class Recipe implements Serializable {
 	private String  serving;
 	private String  dishImageUrl;
 	private Integer authorUserId;
+	private Integer ingredientId;
 
 	public Recipe() {}
 
@@ -40,6 +41,7 @@ public class Recipe implements Serializable {
 		this.serving = value.serving;
 		this.dishImageUrl = value.dishImageUrl;
 		this.authorUserId = value.authorUserId;
+		this.ingredientId = value.ingredientId;
 	}
 
 	public Recipe(
@@ -48,7 +50,8 @@ public class Recipe implements Serializable {
 		String  summary,
 		String  serving,
 		String  dishImageUrl,
-		Integer authorUserId
+		Integer authorUserId,
+		Integer ingredientId
 	) {
 		this.recipeId = recipeId;
 		this.dishName = dishName;
@@ -56,6 +59,7 @@ public class Recipe implements Serializable {
 		this.serving = serving;
 		this.dishImageUrl = dishImageUrl;
 		this.authorUserId = authorUserId;
+		this.ingredientId = ingredientId;
 	}
 
 	public Integer getRecipeId() {
@@ -106,6 +110,14 @@ public class Recipe implements Serializable {
 		this.authorUserId = authorUserId;
 	}
 
+	public Integer getIngredientId() {
+		return this.ingredientId;
+	}
+
+	public void setIngredientId(Integer ingredientId) {
+		this.ingredientId = ingredientId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Recipe (");
@@ -116,6 +128,7 @@ public class Recipe implements Serializable {
 		sb.append(", ").append(serving);
 		sb.append(", ").append(dishImageUrl);
 		sb.append(", ").append(authorUserId);
+		sb.append(", ").append(ingredientId);
 
 		sb.append(")");
 		return sb.toString();

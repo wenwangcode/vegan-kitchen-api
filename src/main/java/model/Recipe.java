@@ -13,16 +13,18 @@ import java.util.List;
 public class Recipe extends model.mapping.tables.pojos.Recipe{
 
     List<RecipeInstruction> recipeInstructionList = new ArrayList<>();
+    List<Ingredient> ingredientList = new ArrayList<>();
 
     public Recipe(){};
 
-    public Recipe(Integer recipeId, String dishName, String summary, String servingSize, String dishImageUrl, int authorUserId) {
+    public Recipe(Integer recipeId, String dishName, String summary, String servingSize, String dishImageUrl, int authorUserId, int ingredientId) {
         setRecipeId(recipeId);
         setDishName(dishName);
         setSummary(summary);
         setServing(servingSize);
         setDishImageUrl(dishImageUrl);
         setAuthorUserId(authorUserId);
+        setIngredientId(ingredientId);
     }
 
     @Override
@@ -119,5 +121,22 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
 
     public void addRecipeInstructions(RecipeInstruction recipeInstruction) {
         this.recipeInstructionList.add(recipeInstruction);
+    }
+
+    @JsonProperty("ingredient_id")
+    public List<Ingredient> getIngredientList()
+    {
+        return this.ingredientList;
+    }
+
+    @JsonProperty("ingredient_id")
+    public void setIngredientList(List<Ingredient> ingredientList)
+    {
+        this.ingredientList = ingredientList;
+    }
+
+    public void addIngredients(Ingredient ingredient)
+    {
+        this.ingredientList.add(ingredient);
     }
 }

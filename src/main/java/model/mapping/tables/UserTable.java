@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserTable extends TableImpl<UserRecord> {
 
-	private static final long serialVersionUID = 617081886;
+	private static final long serialVersionUID = 1241141149;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.user</code>
@@ -70,9 +70,9 @@ public class UserTable extends TableImpl<UserRecord> {
 	public final TableField<UserRecord, String> PASSWORD = createField("password", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
 
 	/**
-	 * The column <code>vegan_kitchen_api.user.is_block</code>.
+	 * The column <code>vegan_kitchen_api.user.is_blocked</code>.
 	 */
-	public final TableField<UserRecord, Byte> IS_BLOCK = createField("is_block", org.jooq.impl.SQLDataType.TINYINT, this, "");
+	public final TableField<UserRecord, Byte> IS_BLOCKED = createField("is_blocked", org.jooq.impl.SQLDataType.TINYINT, this, "");
 
 	/**
 	 * Create a <code>vegan_kitchen_api.user</code> table reference
