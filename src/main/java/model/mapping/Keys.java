@@ -9,10 +9,12 @@ import javax.annotation.Generated;
 import model.mapping.tables.LoggingTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
+import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 import model.mapping.tables.records.LoggingRecord;
 import model.mapping.tables.records.RecipeInstructionRecord;
 import model.mapping.tables.records.RecipeRecord;
+import model.mapping.tables.records.UserAttemptRecord;
 import model.mapping.tables.records.UserRecord;
 
 import org.jooq.Identity;
@@ -56,6 +58,8 @@ public class Keys {
 	public static final UniqueKey<UserRecord> KEY_USER_USER_ID = UniqueKeys0.KEY_USER_USER_ID;
 	public static final UniqueKey<UserRecord> KEY_USER_USER_NAME = UniqueKeys0.KEY_USER_USER_NAME;
 	public static final UniqueKey<UserRecord> KEY_USER_EMAIL = UniqueKeys0.KEY_USER_EMAIL;
+	public static final UniqueKey<UserAttemptRecord> KEY_USER_ATTEMPT_USER_ID = UniqueKeys0.KEY_USER_ATTEMPT_USER_ID;
+	public static final UniqueKey<UserAttemptRecord> KEY_USER_ATTEMPT_SESSION_ID = UniqueKeys0.KEY_USER_ATTEMPT_SESSION_ID;
 
 	// -------------------------------------------------------------------------
 	// FOREIGN KEY definitions
@@ -83,5 +87,7 @@ public class Keys {
 		public static final UniqueKey<UserRecord> KEY_USER_USER_ID = createUniqueKey(UserTable.USER, UserTable.USER.USER_ID);
 		public static final UniqueKey<UserRecord> KEY_USER_USER_NAME = createUniqueKey(UserTable.USER, UserTable.USER.USER_NAME);
 		public static final UniqueKey<UserRecord> KEY_USER_EMAIL = createUniqueKey(UserTable.USER, UserTable.USER.EMAIL);
+		public static final UniqueKey<UserAttemptRecord> KEY_USER_ATTEMPT_USER_ID = createUniqueKey(UserAttemptTable.USER_ATTEMPT, UserAttemptTable.USER_ATTEMPT.USER_ID);
+		public static final UniqueKey<UserAttemptRecord> KEY_USER_ATTEMPT_SESSION_ID = createUniqueKey(UserAttemptTable.USER_ATTEMPT, UserAttemptTable.USER_ATTEMPT.SESSION_ID);
 	}
 }

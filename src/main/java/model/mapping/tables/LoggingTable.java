@@ -33,7 +33,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class LoggingTable extends TableImpl<LoggingRecord> {
 
-	private static final long serialVersionUID = -1628183654;
+	private static final long serialVersionUID = -325505518;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.logging</code>
@@ -57,6 +57,16 @@ public class LoggingTable extends TableImpl<LoggingRecord> {
 	 * The column <code>vegan_kitchen_api.logging.session_id</code>.
 	 */
 	public final TableField<LoggingRecord, String> SESSION_ID = createField("session_id", org.jooq.impl.SQLDataType.VARCHAR.length(255).nullable(false), this, "");
+
+	/**
+	 * The column <code>vegan_kitchen_api.logging.exception</code>.
+	 */
+	public final TableField<LoggingRecord, String> EXCEPTION = createField("exception", org.jooq.impl.SQLDataType.VARCHAR.length(225), this, "");
+
+	/**
+	 * The column <code>vegan_kitchen_api.logging.message</code>.
+	 */
+	public final TableField<LoggingRecord, String> MESSAGE = createField("message", org.jooq.impl.SQLDataType.VARCHAR.length(500), this, "");
 
 	/**
 	 * Create a <code>vegan_kitchen_api.logging</code> table reference

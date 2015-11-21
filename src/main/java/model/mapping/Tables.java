@@ -6,9 +6,11 @@ package model.mapping;
 
 import javax.annotation.Generated;
 
+import model.mapping.tables.IngredientRecipeTable;
 import model.mapping.tables.LoggingTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
+import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 
 
@@ -24,6 +26,11 @@ import model.mapping.tables.UserTable;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+	/**
+	 * The table vegan_kitchen_api.ingredient_recipe
+	 */
+	public static final IngredientRecipeTable INGREDIENT_RECIPE = model.mapping.tables.IngredientRecipeTable.INGREDIENT_RECIPE;
 
 	/**
 	 * The table vegan_kitchen_api.logging
@@ -44,4 +51,9 @@ public class Tables {
 	 * The table vegan_kitchen_api.user
 	 */
 	public static final UserTable USER = model.mapping.tables.UserTable.USER;
+
+	/**
+	 * The table vegan_kitchen_api.user_attempt
+	 */
+	public static final UserAttemptTable USER_ATTEMPT = model.mapping.tables.UserAttemptTable.USER_ATTEMPT;
 }

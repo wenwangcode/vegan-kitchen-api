@@ -22,12 +22,13 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 1618127037;
+	private static final long serialVersionUID = -83820147;
 
 	private Integer userId;
 	private String  userName;
 	private String  email;
 	private String  password;
+	private Byte    isBlock;
 
 	public User() {}
 
@@ -36,18 +37,21 @@ public class User implements Serializable {
 		this.userName = value.userName;
 		this.email = value.email;
 		this.password = value.password;
+		this.isBlock = value.isBlock;
 	}
 
 	public User(
 		Integer userId,
 		String  userName,
 		String  email,
-		String  password
+		String  password,
+		Byte    isBlock
 	) {
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
+		this.isBlock = isBlock;
 	}
 
 	public Integer getUserId() {
@@ -82,6 +86,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
+	public Byte getIsBlock() {
+		return this.isBlock;
+	}
+
+	public void setIsBlock(Byte isBlock) {
+		this.isBlock = isBlock;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("User (");
@@ -90,6 +102,7 @@ public class User implements Serializable {
 		sb.append(", ").append(userName);
 		sb.append(", ").append(email);
 		sb.append(", ").append(password);
+		sb.append(", ").append(isBlock);
 
 		sb.append(")");
 		return sb.toString();

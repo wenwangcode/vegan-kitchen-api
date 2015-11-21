@@ -1,6 +1,6 @@
 package tests;
 
-import database.utility.ConnectionFactory;
+import factory.database.ConnectionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import static com.jayway.restassured.RestAssured.expect;

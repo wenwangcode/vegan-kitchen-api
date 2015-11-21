@@ -10,9 +10,11 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
+import model.mapping.tables.IngredientRecipeTable;
 import model.mapping.tables.LoggingTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
+import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 
 import org.jooq.Table;
@@ -32,7 +34,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class VeganKitchenApiSchema extends SchemaImpl {
 
-	private static final long serialVersionUID = 1700114979;
+	private static final long serialVersionUID = 1073539912;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api</code>
@@ -55,9 +57,11 @@ public class VeganKitchenApiSchema extends SchemaImpl {
 
 	private final List<Table<?>> getTables0() {
 		return Arrays.<Table<?>>asList(
+			IngredientRecipeTable.INGREDIENT_RECIPE,
 			LoggingTable.LOGGING,
 			RecipeTable.RECIPE,
 			RecipeInstructionTable.RECIPE_INSTRUCTION,
-			UserTable.USER);
+			UserTable.USER,
+			UserAttemptTable.USER_ATTEMPT);
 	}
 }

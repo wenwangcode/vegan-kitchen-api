@@ -23,9 +23,25 @@ CREATE TABLE user (
   user_name VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
+  is_blocked BOOL,
   PRIMARY KEY (user_id)
 );
 CREATE TABLE logging (
   user_id INT UNIQUE NOT NULL,
-  session_id VARCHAR(255) UNIQUE NOT NULL
+  session_id VARCHAR(255) UNIQUE NOT NULL,
+  exception VARCHAR(225),
+  message VARCHAR(500)
+);
+
+CREATE TABLE ingredient_recipe (
+  name VARCHAR(50) NOT NULL,
+  recipe_id INT NOT NULL,
+  image_url VARCHAR(225)
+);
+
+CREATE TABLE user_attempt (
+  user_id INT UNIQUE NOT NULL,
+  attempt_number INT,
+  message VARCHAR(225),
+  session_id VARCHAR(225) UNIQUE NOT NULL
 )
