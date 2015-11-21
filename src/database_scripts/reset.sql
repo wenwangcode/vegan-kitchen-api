@@ -13,6 +13,7 @@ CREATE TABLE recipe (
 CREATE TABLE recipe_instruction (
   recipe_id INT NOT NULL,
   instruction_id INT UNIQUE NOT NULL AUTO_INCREMENT,
+  step_number int NOT NULL,
   instruction VARCHAR(255) NOT NULL,
   image_url VARCHAR(255),
   PRIMARY KEY (instruction_id)

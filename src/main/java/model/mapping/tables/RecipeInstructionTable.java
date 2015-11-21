@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipeInstructionTable extends TableImpl<RecipeInstructionRecord> {
 
-	private static final long serialVersionUID = 433121874;
+	private static final long serialVersionUID = -1308829145;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.recipe_instruction</code>
@@ -58,6 +58,11 @@ public class RecipeInstructionTable extends TableImpl<RecipeInstructionRecord> {
 	 * The column <code>vegan_kitchen_api.recipe_instruction.instruction_id</code>.
 	 */
 	public final TableField<RecipeInstructionRecord, Integer> INSTRUCTION_ID = createField("instruction_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+	/**
+	 * The column <code>vegan_kitchen_api.recipe_instruction.step_number</code>.
+	 */
+	public final TableField<RecipeInstructionRecord, Integer> STEP_NUMBER = createField("step_number", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
 	/**
 	 * The column <code>vegan_kitchen_api.recipe_instruction.instruction</code>.

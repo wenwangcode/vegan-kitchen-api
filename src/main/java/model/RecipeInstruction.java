@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,21 +11,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RecipeInstruction extends model.mapping.tables.pojos.RecipeInstruction{
 
-    public RecipeInstruction(Integer recipeID, Integer instructionID, String instruction, String imageURL){
+    public RecipeInstruction() {}
+
+    public RecipeInstruction(Integer recipeID, Integer instructionID, Integer stepNumber, String instruction, String imageURL){
         setRecipeId(recipeID);
         setInstructionId(instructionID);
+        setStepNumber(stepNumber);
         setInstruction(instruction);
         setImageUrl(imageURL);
     }
 
     @Override
-    @JsonProperty("recipe_id")
+    @JsonIgnore
     public Integer getRecipeId() {
         return super.getRecipeId();
     }
 
     @Override
-    @JsonProperty("recipe_id")
+    @JsonIgnore
     public void setRecipeId(Integer recipeId) {
         super.setRecipeId(recipeId);
     }
@@ -39,6 +43,18 @@ public class RecipeInstruction extends model.mapping.tables.pojos.RecipeInstruct
     @JsonProperty("instruction_id")
     public void setInstructionId(Integer instructionId) {
         super.setInstructionId(instructionId);
+    }
+
+    @Override
+    @JsonProperty("step_number")
+    public Integer getStepNumber() {
+        return super.getStepNumber();
+    }
+
+    @Override
+    @JsonProperty("step_number")
+    public void setStepNumber(Integer stepNumber) {
+        super.setStepNumber(stepNumber);
     }
 
     @Override
