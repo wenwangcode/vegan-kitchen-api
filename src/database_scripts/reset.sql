@@ -37,7 +37,8 @@ CREATE TABLE logging (
 CREATE TABLE ingredient_recipe (
   name VARCHAR(50) NOT NULL,
   recipe_id INT NOT NULL,
-  image_url VARCHAR(225)
+  image_url VARCHAR(225),
+  ingredient_id INT NOT NULL
 );
 
 CREATE TABLE user_attempt (

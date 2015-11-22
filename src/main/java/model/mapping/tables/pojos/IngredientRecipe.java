@@ -22,11 +22,12 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class IngredientRecipe implements Serializable {
 
-	private static final long serialVersionUID = -983658473;
+	private static final long serialVersionUID = -1499922798;
 
 	private String  name;
 	private Integer recipeId;
 	private String  imageUrl;
+	private Integer ingredientId;
 
 	public IngredientRecipe() {}
 
@@ -34,16 +35,19 @@ public class IngredientRecipe implements Serializable {
 		this.name = value.name;
 		this.recipeId = value.recipeId;
 		this.imageUrl = value.imageUrl;
+		this.ingredientId = value.ingredientId;
 	}
 
 	public IngredientRecipe(
 		String  name,
 		Integer recipeId,
-		String  imageUrl
+		String  imageUrl,
+		Integer ingredientId
 	) {
 		this.name = name;
 		this.recipeId = recipeId;
 		this.imageUrl = imageUrl;
+		this.ingredientId = ingredientId;
 	}
 
 	public String getName() {
@@ -70,6 +74,14 @@ public class IngredientRecipe implements Serializable {
 		this.imageUrl = imageUrl;
 	}
 
+	public Integer getIngredientId() {
+		return this.ingredientId;
+	}
+
+	public void setIngredientId(Integer ingredientId) {
+		this.ingredientId = ingredientId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("IngredientRecipe (");
@@ -77,6 +89,7 @@ public class IngredientRecipe implements Serializable {
 		sb.append(name);
 		sb.append(", ").append(recipeId);
 		sb.append(", ").append(imageUrl);
+		sb.append(", ").append(ingredientId);
 
 		sb.append(")");
 		return sb.toString();
