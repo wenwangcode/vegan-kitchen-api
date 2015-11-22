@@ -42,14 +42,17 @@ public class RecipeManager {
         }
     }
 
-    public Recipe addRecipe(Recipe recipe) throws Exception {
+    public boolean addRecipe(Recipe recipe) {
+        boolean recipeCreated = true;
         try (Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
-            recipe.setRecipeId(recipeRecord.getRecipeId());
+            recipeInstructionManager.addRecipeInstructionList(recipeRecord.getRecipeId(), recipe.getRecipeInstructionList());
+        } catch (Exception exception) {
+            recipeCreated = false;
         }
-        return recipe;
+        return recipeCreated;
     }
 
 }
