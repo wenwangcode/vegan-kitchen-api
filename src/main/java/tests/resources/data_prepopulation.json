@@ -1,0 +1,14 @@
+{
+  "get_all_recipes_test": {
+    "recipe_table": [
+      {
+        "dish_name": "best dish 1",
+        "summary": "best dish for date",
+        "serving": "one hundred girls",
+        "dish_image_url": "http://bestdish.com",
+        "author_user_id": 1,
+        "ingredient_id": 1
+      }
+    ]
+  }
+}
