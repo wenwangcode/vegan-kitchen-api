@@ -5,7 +5,7 @@ import org.glassfish.jersey.message.internal.XmlCollectionJaxbProvider;
 /**
  * Created by wendywang on 2015-11-14.
  */
-public class ApplicationLogging {
+public class ApplicationLogging extends model.mapping.tables.pojos.Logging{
 
     private int userID;
     private String sessionID;
@@ -42,11 +42,13 @@ public class ApplicationLogging {
         return message;
     }
 
-    public void setMessage(String message){
+    public void setMessage(String message)
+    {
         this.message = message;
     }
 
-    public String getException(){
+    public String getException()
+    {
         return exception;
     }
 
