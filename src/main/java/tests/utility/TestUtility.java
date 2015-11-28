@@ -2,6 +2,7 @@ package utility;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibatis.common.jdbc.ScriptRunner;
 import model.mapping.tables.pojos.Recipe;
 import model.mapping.tables.records.RecipeRecord;
 import org.codehaus.plexus.util.IOUtil;
@@ -10,6 +11,7 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
@@ -56,6 +58,23 @@ public class TestUtility {
         }
     }
 
+    public void resetDataBase() throws Exception{
+        runSQLScript("reset.sql");
+    }
+
+    public void runSQLScript(String sqlScript) throws Exception{
+        try (Connection connection = getDatabaseConnection()) {
+            ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
+            InputStream scriptInputStream = this.getClass().getClassLoader().getResourceAsStream("resources/data_scripts/" + sqlScript);
+            InputStreamReader inputStreamReader = new InputStreamReader(scriptInputStream);
+            scriptRunner.runScript(inputStreamReader);
+        }
+        catch (Exception exception) {
+            exception.printStackTrace();
+            throw exception;
+        }
+    }
+
     public Map<String, Object> getData(String fileName) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = IOUtil.toString(this.getClass().getResourceAsStream(TEST_DATA_PATH + fileName));
@@ -86,7 +105,6 @@ public class TestUtility {
                 recipe.setServing((String) recipeMap.get("serving"));
                 recipe.setDishImageUrl((String) recipeMap.get("dish_image_url"));
                 recipe.setAuthorUserId((Integer) recipeMap.get("author_user_id"));
-                recipe.setIngredientId((Integer) recipeMap.get("ingredient_id"));
                 recipeList.add(recipe);
             }
         }

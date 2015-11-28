@@ -8,7 +8,6 @@ CREATE TABLE recipe (
   serving VARCHAR(50) NOT NULL,
   dish_image_url VARCHAR(255) NOT NULL,
   author_user_id INT NOT NULL,
-  ingredient_id INT NOT NULL,
   PRIMARY KEY (recipe_id)
 );
 CREATE TABLE recipe_instruction (
@@ -18,6 +17,14 @@ CREATE TABLE recipe_instruction (
   instruction VARCHAR(255) NOT NULL,
   image_url VARCHAR(255),
   PRIMARY KEY (instruction_id)
+);
+CREATE TABLE recipe_ingredient (
+  recipe_id INT NOT NULL,
+  ingredient_id INT UNIQUE NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  amount VARCHAR(50) NOT NULL,
+  image_url VARCHAR(225),
+  PRIMARY KEY (ingredient_id)
 );
 CREATE TABLE user (
   user_id INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -33,14 +40,6 @@ CREATE TABLE logging (
   exception VARCHAR(225),
   message VARCHAR(500)
 );
-
-CREATE TABLE ingredient_recipe (
-  name VARCHAR(50) NOT NULL,
-  recipe_id INT NOT NULL,
-  image_url VARCHAR(225),
-  ingredient_id INT NOT NULL
-);
-
 CREATE TABLE user_attempt (
   user_id INT UNIQUE NOT NULL,
   attempt_number INT,

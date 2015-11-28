@@ -13,7 +13,7 @@ import java.util.List;
 public class Recipe extends model.mapping.tables.pojos.Recipe{
 
     List<RecipeInstruction> recipeInstructionList = new ArrayList<>();
-    List<Ingredient> ingredientList = new ArrayList<>();
+    List<RecipeIngredient> recipeIngredientList = new ArrayList<>();
 
     public Recipe(){};
 
@@ -24,7 +24,6 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
         setServing(servingSize);
         setDishImageUrl(dishImageUrl);
         setAuthorUserId(authorUserId);
-        setIngredientId(ingredientId);
     }
 
     @Override
@@ -38,6 +37,7 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
     public void setRecipeId(Integer recipeId) {
         super.setRecipeId(recipeId);
         setRecipeIdToRecipeInstructionList();
+        setRecipeIdToRecipeIngredientList();
     }
 
     /**
@@ -46,6 +46,15 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
     private void setRecipeIdToRecipeInstructionList() {
         for (RecipeInstruction instruction: recipeInstructionList) {
             instruction.setRecipeId(getRecipeId());
+        }
+    }
+
+    /**
+     * set recipe id to the associated recipe ingredient list
+     */
+    private void setRecipeIdToRecipeIngredientList() {
+        for (RecipeIngredient ingredient: recipeIngredientList) {
+            ingredient.setRecipeId(getRecipeId());
         }
     }
 
@@ -123,20 +132,17 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
         this.recipeInstructionList.add(recipeInstruction);
     }
 
-    @JsonProperty("ingredient_id")
-    public List<Ingredient> getIngredientList()
-    {
-        return this.ingredientList;
+    @JsonProperty("recipe_ingredients")
+    public List<RecipeIngredient> getRecipeIngredientList() {
+        return this.recipeIngredientList;
     }
 
-    @JsonProperty("ingredient_id")
-    public void setIngredientList(List<Ingredient> ingredientList)
-    {
-        this.ingredientList = ingredientList;
+    @JsonProperty("recipe_ingredients")
+    public void setRecipeIngredientList(List<RecipeIngredient> recipeIngredientList) {
+        this.recipeIngredientList = recipeIngredientList;
     }
 
-    public void addIngredients(Ingredient ingredient)
-    {
-        this.ingredientList.add(ingredient);
+    public void addIngredients(RecipeIngredient recipeIngredient) {
+        this.recipeIngredientList.add(recipeIngredient);
     }
 }

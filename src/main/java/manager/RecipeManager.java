@@ -18,20 +18,28 @@ import static model.mapping.tables.RecipeTable.RECIPE;
 
 public class RecipeManager {
 
-    RecipeInstructionManager recipeInstructionManager = new RecipeInstructionManager();
+    RecipeInstructionManager instructionManager = new RecipeInstructionManager();
+    RecipeIngredientManager ingredientManager = new RecipeIngredientManager();
 
     public List<Recipe> getRecipes() throws Exception {
         try (Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<Recipe> recipeList = create.select().from(RECIPE).fetchInto(Recipe.class);
             attachRecipeInstruction(recipeList);
+            attachRecipeIngredient(recipeList);
             return recipeList;
         }
     }
 
     private void attachRecipeInstruction(List<Recipe> recipeList) throws Exception {
         for (Recipe recipe: recipeList) {
-            recipe.setRecipeInstructionList(recipeInstructionManager.getRecipeInstructionListByRecipeId(recipe.getRecipeId()));
+            recipe.setRecipeInstructionList(instructionManager.getRecipeInstructionListByRecipeId(recipe.getRecipeId()));
+        }
+    }
+
+    private void attachRecipeIngredient(List<Recipe> recipeList) throws Exception {
+        for (Recipe recipe: recipeList) {
+            recipe.setRecipeIngredientList(ingredientManager.getRecipeIngredientByRecipeId(recipe.getRecipeId()));
         }
     }
 
@@ -48,7 +56,7 @@ public class RecipeManager {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
-            recipeInstructionManager.addRecipeInstructionList(recipeRecord.getRecipeId(), recipe.getRecipeInstructionList());
+            instructionManager.addRecipeInstructionList(recipeRecord.getRecipeId(), recipe.getRecipeInstructionList());
         } catch (Exception exception) {
             recipeCreated = false;
         }

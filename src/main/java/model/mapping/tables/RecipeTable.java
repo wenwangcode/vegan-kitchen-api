@@ -4,21 +4,15 @@
 package model.mapping.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Generated;
-
 import model.mapping.Keys;
 import model.mapping.VeganKitchenApiSchema;
 import model.mapping.tables.records.RecipeRecord;
-
-import org.jooq.Field;
-import org.jooq.Identity;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.TableImpl;
+
+import javax.annotation.Generated;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -34,7 +28,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipeTable extends TableImpl<RecipeRecord> {
 
-	private static final long serialVersionUID = 632975683;
+	private static final long serialVersionUID = 1293236300;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.recipe</code>
@@ -78,11 +72,6 @@ public class RecipeTable extends TableImpl<RecipeRecord> {
 	 * The column <code>vegan_kitchen_api.recipe.author_user_id</code>.
 	 */
 	public final TableField<RecipeRecord, Integer> AUTHOR_USER_ID = createField("author_user_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
-
-	/**
-	 * The column <code>vegan_kitchen_api.recipe.ingredient_id</code>.
-	 */
-	public final TableField<RecipeRecord, Integer> INGREDIENT_ID = createField("ingredient_id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
 
 	/**
 	 * Create a <code>vegan_kitchen_api.recipe</code> table reference

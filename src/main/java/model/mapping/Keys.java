@@ -7,11 +7,13 @@ package model.mapping;
 import javax.annotation.Generated;
 
 import model.mapping.tables.LoggingTable;
+import model.mapping.tables.RecipeIngredientTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
 import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 import model.mapping.tables.records.LoggingRecord;
+import model.mapping.tables.records.RecipeIngredientRecord;
 import model.mapping.tables.records.RecipeInstructionRecord;
 import model.mapping.tables.records.RecipeRecord;
 import model.mapping.tables.records.UserAttemptRecord;
@@ -41,6 +43,7 @@ public class Keys {
 	// -------------------------------------------------------------------------
 
 	public static final Identity<RecipeRecord, Integer> IDENTITY_RECIPE = Identities0.IDENTITY_RECIPE;
+	public static final Identity<RecipeIngredientRecord, Integer> IDENTITY_RECIPE_INGREDIENT = Identities0.IDENTITY_RECIPE_INGREDIENT;
 	public static final Identity<RecipeInstructionRecord, Integer> IDENTITY_RECIPE_INSTRUCTION = Identities0.IDENTITY_RECIPE_INSTRUCTION;
 	public static final Identity<UserRecord, Integer> IDENTITY_USER = Identities0.IDENTITY_USER;
 
@@ -52,6 +55,8 @@ public class Keys {
 	public static final UniqueKey<LoggingRecord> KEY_LOGGING_SESSION_ID = UniqueKeys0.KEY_LOGGING_SESSION_ID;
 	public static final UniqueKey<RecipeRecord> KEY_RECIPE_PRIMARY = UniqueKeys0.KEY_RECIPE_PRIMARY;
 	public static final UniqueKey<RecipeRecord> KEY_RECIPE_RECIPE_ID = UniqueKeys0.KEY_RECIPE_RECIPE_ID;
+	public static final UniqueKey<RecipeIngredientRecord> KEY_RECIPE_INGREDIENT_PRIMARY = UniqueKeys0.KEY_RECIPE_INGREDIENT_PRIMARY;
+	public static final UniqueKey<RecipeIngredientRecord> KEY_RECIPE_INGREDIENT_INGREDIENT_ID = UniqueKeys0.KEY_RECIPE_INGREDIENT_INGREDIENT_ID;
 	public static final UniqueKey<RecipeInstructionRecord> KEY_RECIPE_INSTRUCTION_PRIMARY = UniqueKeys0.KEY_RECIPE_INSTRUCTION_PRIMARY;
 	public static final UniqueKey<RecipeInstructionRecord> KEY_RECIPE_INSTRUCTION_INSTRUCTION_ID = UniqueKeys0.KEY_RECIPE_INSTRUCTION_INSTRUCTION_ID;
 	public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = UniqueKeys0.KEY_USER_PRIMARY;
@@ -72,6 +77,7 @@ public class Keys {
 
 	private static class Identities0 extends AbstractKeys {
 		public static Identity<RecipeRecord, Integer> IDENTITY_RECIPE = createIdentity(RecipeTable.RECIPE, RecipeTable.RECIPE.RECIPE_ID);
+		public static Identity<RecipeIngredientRecord, Integer> IDENTITY_RECIPE_INGREDIENT = createIdentity(RecipeIngredientTable.RECIPE_INGREDIENT, RecipeIngredientTable.RECIPE_INGREDIENT.INGREDIENT_ID);
 		public static Identity<RecipeInstructionRecord, Integer> IDENTITY_RECIPE_INSTRUCTION = createIdentity(RecipeInstructionTable.RECIPE_INSTRUCTION, RecipeInstructionTable.RECIPE_INSTRUCTION.INSTRUCTION_ID);
 		public static Identity<UserRecord, Integer> IDENTITY_USER = createIdentity(UserTable.USER, UserTable.USER.USER_ID);
 	}
@@ -81,6 +87,8 @@ public class Keys {
 		public static final UniqueKey<LoggingRecord> KEY_LOGGING_SESSION_ID = createUniqueKey(LoggingTable.LOGGING, LoggingTable.LOGGING.SESSION_ID);
 		public static final UniqueKey<RecipeRecord> KEY_RECIPE_PRIMARY = createUniqueKey(RecipeTable.RECIPE, RecipeTable.RECIPE.RECIPE_ID);
 		public static final UniqueKey<RecipeRecord> KEY_RECIPE_RECIPE_ID = createUniqueKey(RecipeTable.RECIPE, RecipeTable.RECIPE.RECIPE_ID);
+		public static final UniqueKey<RecipeIngredientRecord> KEY_RECIPE_INGREDIENT_PRIMARY = createUniqueKey(RecipeIngredientTable.RECIPE_INGREDIENT, RecipeIngredientTable.RECIPE_INGREDIENT.INGREDIENT_ID);
+		public static final UniqueKey<RecipeIngredientRecord> KEY_RECIPE_INGREDIENT_INGREDIENT_ID = createUniqueKey(RecipeIngredientTable.RECIPE_INGREDIENT, RecipeIngredientTable.RECIPE_INGREDIENT.INGREDIENT_ID);
 		public static final UniqueKey<RecipeInstructionRecord> KEY_RECIPE_INSTRUCTION_PRIMARY = createUniqueKey(RecipeInstructionTable.RECIPE_INSTRUCTION, RecipeInstructionTable.RECIPE_INSTRUCTION.INSTRUCTION_ID);
 		public static final UniqueKey<RecipeInstructionRecord> KEY_RECIPE_INSTRUCTION_INSTRUCTION_ID = createUniqueKey(RecipeInstructionTable.RECIPE_INSTRUCTION, RecipeInstructionTable.RECIPE_INSTRUCTION.INSTRUCTION_ID);
 		public static final UniqueKey<UserRecord> KEY_USER_PRIMARY = createUniqueKey(UserTable.USER, UserTable.USER.USER_ID);
