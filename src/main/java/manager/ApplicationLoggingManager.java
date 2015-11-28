@@ -24,7 +24,9 @@ public class ApplicationLoggingManager {
             while (rs.next()) {
                 ApplicationLogging applicationLoggingObj = new ApplicationLogging();
                 applicationLoggingObj.setSessionID(rs.getString("session_id"));
-                applicationLoggingObj.setSessionID(rs.getString("user_id"));
+                applicationLoggingObj.setUserID(rs.getInt("user_id"));
+                applicationLoggingObj.setMessage(rs.getString("message"));
+                applicationLoggingObj.setException(rs.getString("exception"));
                 applicationLoggings.add(applicationLoggingObj);
             }
         } catch (Exception e) {

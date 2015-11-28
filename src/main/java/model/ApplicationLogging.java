@@ -9,13 +9,17 @@ public class ApplicationLogging {
 
     private int userID;
     private String sessionID;
+    private String message;
+    private String exception;
 
     public ApplicationLogging(){}
 
-    public ApplicationLogging(int userID, String sessionID){
+    public ApplicationLogging(int userID, String sessionID, String message, String exception){
 
         this.userID = userID;
         this.sessionID = sessionID;
+        this.exception = exception;
+        this.message = message;
     }
 
     public int getUserID() {
@@ -33,4 +37,23 @@ public class ApplicationLogging {
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
     }
+
+    public String getMessage(){
+        return message;
+    }
+
+    public void setMessage(String message){
+        this.message = message;
+    }
+
+    public String getException(){
+        return exception;
+    }
+
+    public void setException(String exception)
+    {
+        this.exception = exception;
+    }
+
+
 }
