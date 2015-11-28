@@ -15,3 +15,5 @@ out/
 target/
 /out
 /target
+config.properties
+test.config.properties

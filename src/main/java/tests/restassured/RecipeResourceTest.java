@@ -26,11 +26,20 @@ public class RecipeResourceTest {
     }
 
     @Test
-    public void testGetAllRecipe() {
+    public void testAllRecipeOKStatus() {
         when()
             .get("http://localhost:8080/recipe/all")
         .then()
             .assertThat()
                 .statusCode(200);
+    }
+
+    @Test
+    public void testN() {
+        when()
+                .delete("http://localhost:8080/recipe/all")
+                .then()
+                .assertThat()
+                .statusCode(204);
     }
 }
