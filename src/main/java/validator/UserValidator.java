@@ -19,7 +19,17 @@ public class UserValidator {
     //check if the token is valid
     //anything
     //handle error and pass to users, use number to represent
-    public static boolean isValid(String authorization) {
-        return true; // TODO
+    /*
+    **
+     */
+    public static boolean isValid(String authorization)
+    {
+        authorization = this.userManager.createSessionId();
+        if (authorization != null)
+        {
+
+        }
+
+        return true;
     }
 }
