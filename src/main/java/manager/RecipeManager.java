@@ -45,22 +45,34 @@ public class RecipeManager {
 
     public Recipe getRecipeByID(int recipeID) throws Exception {
         try(Connection connection = ConnectionFactory.getConnection()) {
+            Recipe returnRecipe;
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            return create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeID)).fetchAny().into(Recipe.class);
+            returnRecipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeID)).fetchAny().into(Recipe.class);
+            attachRecipeInstruction(returnRecipe);
+            attachRecipeIngredient(returnRecipe);
+            return returnRecipe;
         }
     }
 
-    public boolean addRecipe(Recipe recipe) {
-        boolean recipeCreated = true;
+    private void attachRecipeInstruction(Recipe recipe) throws Exception {
+        recipe.setRecipeInstructionList(instructionManager.getRecipeInstructionListByRecipeId(recipe.getRecipeId()));
+    }
+
+    private void attachRecipeIngredient(Recipe recipe) throws Exception {
+        recipe.setRecipeIngredientList(ingredientManager.getRecipeIngredientByRecipeId(recipe.getRecipeId()));
+    }
+
+    public Recipe addRecipe(Recipe recipe) throws Exception {
+        Integer createRecipeId;
         try (Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
-            instructionManager.addRecipeInstructionList(recipeRecord.getRecipeId(), recipe.getRecipeInstructionList());
-        } catch (Exception exception) {
-            recipeCreated = false;
+            createRecipeId = recipeRecord.getRecipeId();
+            instructionManager.addRecipeInstructionList(createRecipeId, recipe.getRecipeInstructionList());
+            ingredientManager.addRecipeIngredientList(createRecipeId, recipe.getRecipeIngredientList());
         }
-        return recipeCreated;
+        return getRecipeByID(createRecipeId);
     }
 
 }
