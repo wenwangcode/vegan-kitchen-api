@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,6 +11,7 @@ import java.util.List;
  * Created by wendywang on 2015-11-07.
  */
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Recipe extends model.mapping.tables.pojos.Recipe{
 
     List<RecipeInstruction> recipeInstructionList = new ArrayList<>();

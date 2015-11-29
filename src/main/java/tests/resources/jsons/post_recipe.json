@@ -1,0 +1,36 @@
+{
+  "dish_name": "dish name 3",
+  "summary": "summary 3",
+  "serving": "serving 3",
+  "dish_image_url": "dish.image.3.com",
+  "author_id": 2,
+  "recipe_instructions": [
+    {
+      "step_number": 1,
+      "instruction": "instruction 31",
+      "image_url": "instruction31.com"
+    },
+    {
+      "step_number": 2,
+      "instruction": "instruction 32",
+      "image_url": "instruction32.com"
+    }
+  ],
+  "recipe_ingredients": [
+    {
+      "name": "ingredient 31",
+      "amount": "10 tons",
+      "image_url": "ingredient31.com"
+    },
+    {
+      "name": "ingredient 32",
+      "amount": "20 tons",
+      "image_url": "ingredient32.com"
+    },
+    {
+      "name": "ingredient 33",
+      "amount": "30 tons",
+      "image_url": "ingredient33.com"
+    }
+  ]
+}
