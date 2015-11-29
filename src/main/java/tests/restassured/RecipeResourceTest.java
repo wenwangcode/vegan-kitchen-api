@@ -8,6 +8,8 @@ import utility.TestUtility;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+
 /**
  * Created by adam on 22/11/15.
  */
@@ -94,6 +96,18 @@ public class RecipeResourceTest {
                 .statusCode(200)
                 .body("result.author_id", equalTo(1));
     }
+
+//    @Test
+//    public void testNumberOfRecipes(){
+//        when()
+//                .get("http://localhost:8080/recipe").
+//        then()
+//                .assertThat()
+//                .statusCode(200)
+//                .body(("keySet().size()"),equalTo(2));
+//    }
+
+    
 
 
 
