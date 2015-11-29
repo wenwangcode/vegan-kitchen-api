@@ -15,7 +15,7 @@ public class RecipeResponseFactory extends ResponseFactory {
 
     private static RecipeManager recipeManager = new RecipeManager();
 
-    public static Response buildGetAllRecipeResponse() {
+    public static Response buildGetAllRecipeResponse() throws Exception {
         Response response;
         try {
             response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipes())).build();
@@ -26,7 +26,7 @@ public class RecipeResponseFactory extends ResponseFactory {
         return response;
     }
 
-    public static Response buildGetRecipeByIdResponse(Integer recipeId) {
+    public static Response buildGetRecipeByIdResponse(Integer recipeId) throws Exception{
         Response response;
         try {
             response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipeByID(recipeId))).build();
@@ -37,7 +37,7 @@ public class RecipeResponseFactory extends ResponseFactory {
         return response;
     }
 
-    public Response buildPostRecipeResponse(String authorization, Recipe recipe) {
+    public static Response buildPostRecipeResponse(String authorization, Recipe recipe) throws Exception{
         //handle
         if (UserValidator.isValid(authorization))
             return getForbiddenResponse("invalid access key [" + authorization + "]");
@@ -45,7 +45,7 @@ public class RecipeResponseFactory extends ResponseFactory {
             return getPostRecipeResponse(recipe);
     }
 
-    private static Response getPostRecipeResponse(Recipe recipe) {
+    private static Response getPostRecipeResponse(Recipe recipe) throws Exception {
         if (recipeManager.addRecipe(recipe)) {
             return Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS)).build();
         }

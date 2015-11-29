@@ -106,7 +106,7 @@ public class UserManager extends ManagerBase{
     /*
     ** create a session id
      */
-    public String createSessionId()
+    public String createSessionId() throws Exception
     {
         String sessionId = super.generateSessionId();
         this.applicationLogging.setSessionID(sessionId);
@@ -116,9 +116,12 @@ public class UserManager extends ManagerBase{
     /*
     ** Create a new session
      */
-    public org.apache.catalina.Session createSession(String sessionId)
-    {
-        sessionId = this.createSessionId();
+    public org.apache.catalina.Session createSession(String sessionId) {
+        try {
+            sessionId = this.createSessionId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return super.createSession(sessionId);
     }
 

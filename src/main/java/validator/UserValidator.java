@@ -26,7 +26,6 @@ public class UserValidator {
         if (authorization != null && !userManager.isBlocked())
         {
             return true;
-
         }
         return false;
     }
