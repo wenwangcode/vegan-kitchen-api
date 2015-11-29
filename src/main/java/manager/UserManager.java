@@ -1,26 +1,31 @@
 package manager;
 
 import factory.database.ConnectionFactory;
+import model.ApplicationLogging;
 import model.User;
 import validator.UserValidator;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.security.MessageDigest;
+import org.apache.catalina.session.ManagerBase;
 /**
  * Created by wendywang on 2015-11-14.
  */
-public class UserManager {
+public class UserManager extends ManagerBase{
 
     private User user;
+    private ApplicationLogging applicationLogging;
 
     public UserManager()
     {
         user = new User();
+        applicationLogging = new ApplicationLogging();
     }
 
     public ArrayList<User> getUsers() throws Exception {
@@ -99,25 +104,37 @@ public class UserManager {
     }
 
     /*
-    ** Create a new session ID
+    ** create a session id
      */
-    public void createSessionId() throws Exception
+    public String createSessionId()
     {
-
+        String sessionId = super.generateSessionId();
+        this.applicationLogging.setSessionID(sessionId);
+        return sessionId;
     }
 
     /*
-    ** Create a user id
+    ** Create a new session
      */
-    public Integer createUserId() throws Exception
+    public org.apache.catalina.Session createSession(String sessionId)
     {
-        return 0;
+        sessionId = this.createSessionId();
+        return super.createSession(sessionId);
     }
 
 
+    @Override
+    public void load() throws ClassNotFoundException, IOException
+    {
+        /*
+        ** We only have one server, so do nothing
+         */
+        return;
+    }
 
+    @Override
+    public void unload() throws IOException {
+        return;
 
-
-
-
+    }
 }
