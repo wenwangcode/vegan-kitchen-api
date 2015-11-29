@@ -16,12 +16,10 @@ import java.util.regex.Pattern;
  */
 public class UserManager {
 
-    private UserValidator userValidator;
     private User user;
 
     public UserManager()
     {
-        userValidator = new UserValidator();
         user = new User();
     }
 
@@ -49,21 +47,20 @@ public class UserManager {
     /*
     ** Update email
      */
-    public void updateEmail(String email, String authorizationToken) throws Exception
+    public void updateEmail(String email) throws Exception
     {
-        if (!this.isBlocked() && userValidator.isValid(authorizationToken))
+        if (email != null && this.isValidEmail(email))
         {
-           user.setEmail(email);
+            user.setEmail(email);
         }
-
     }
 
     /*
     ** Update password
      */
-    public void updatePassword(String password, String authorizationToken) throws Exception
+    public void updatePassword(String password) throws Exception
     {
-        if (!this.isBlocked() && userValidator.isValid(authorizationToken))
+        if (password != null)
         {
             user.setPassword(password);
         }
