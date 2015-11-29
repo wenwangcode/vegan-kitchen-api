@@ -20,10 +20,10 @@ public class UserManager {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 User userObj = new User();
-                userObj.setUser_id(rs.getInt("user_id"));
+                userObj.setUserId(rs.getInt("user_id"));
                 userObj.setEmail(rs.getString("email"));
-                userObj.setPasscode(rs.getString("password"));
-                userObj.setUsername(rs.getString("user_name"));
+                userObj.setPassword(rs.getString("password"));
+                userObj.setUserName(rs.getString("user_name"));
                 userArrayList.add(userObj);
             }
         }
