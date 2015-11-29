@@ -7,7 +7,7 @@ import manager.UserManager;
  */
 public class UserValidator {
 
-    private UserManager userManager;
+    private static UserManager userManager;
 
     public UserValidator()
     {
@@ -15,21 +15,19 @@ public class UserValidator {
     }
 
 
-    //check user if blocked
-    //check if the token is valid
-    //anything
+
     //handle error and pass to users, use number to represent
     /*
     **
      */
-    public static boolean isValid(String authorization)
+    public static boolean isValid(String authorization) throws Exception
     {
-        authorization = this.userManager.createSessionId();
-        if (authorization != null)
+        authorization = userManager.createSessionId();
+        if (authorization != null && !userManager.isBlocked())
         {
+            return true;
 
         }
-
-        return true;
+        return false;
     }
 }
