@@ -31,4 +31,12 @@ public class  RecipeResource {
         return RecipeResponseFactory.buildPostRecipeResponse(authorization, recipe);
     }
 
+    @PUT
+    @Path("/{recipe_id}")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response putRecipe(@HeaderParam("Authorization") String authorization, @PathParam("recipe_id") Integer recipeId, Recipe recipeUpdate) throws Exception {
+        return RecipeResponseFactory.buildPutRecipeResponse(authorization, recipeId, recipeUpdate);
+    }
+
 }

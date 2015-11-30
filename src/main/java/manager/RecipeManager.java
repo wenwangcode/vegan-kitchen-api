@@ -1,5 +1,6 @@
 package manager;
 
+import com.sun.media.sound.InvalidDataException;
 import factory.database.ConnectionFactory;
 import model.Recipe;
 import model.mapping.tables.records.RecipeRecord;
@@ -73,6 +74,27 @@ public class RecipeManager {
             ingredientManager.addRecipeIngredientList(createRecipeId, recipe.getRecipeIngredientList());
         }
         return getRecipeByID(createRecipeId);
+    }
+
+    public Recipe updateRecipe(Integer recipeId, Recipe recipeUpdate) throws Exception {
+        Recipe exitingRecipe = getRecipeByID(recipeId);
+        updateFields(exitingRecipe, recipeUpdate);
+        return null; // TODO
+    }
+
+    private void updateFields(Recipe exitingRecipe, Recipe recipeUpdate) throws Exception{
+        if (recipeUpdate.getRecipeId() != null && exitingRecipe.getRecipeId().equals(recipeUpdate.getRecipeId()))
+            throw new InvalidDataException("Attempt to update existing recipe id");
+        if (recipeUpdate.getDishName() != null)
+            exitingRecipe.setDishName(recipeUpdate.getDishName());
+        if (recipeUpdate.getSummary() != null)
+            exitingRecipe.setSummary(recipeUpdate.getSummary());
+        if (recipeUpdate.getServing() != null)
+            exitingRecipe.setServing(recipeUpdate.getServing());
+        if (recipeUpdate.getDishImageUrl() != null)
+            exitingRecipe.setDishImageUrl(recipeUpdate.getDishImageUrl());
+        if (recipeUpdate.getAuthorUserId() != null)
+            exitingRecipe.setAuthorUserId(recipeUpdate.getAuthorUserId());
     }
 
 }

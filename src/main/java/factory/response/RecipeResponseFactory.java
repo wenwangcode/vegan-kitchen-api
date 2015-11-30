@@ -38,18 +38,31 @@ public class RecipeResponseFactory extends ResponseFactory {
     }
 
     public static Response buildPostRecipeResponse(String authorization, Recipe recipe) throws Exception {
-        if (!UserValidator.isValid(authorization))
-            return getForbiddenResponse("invalid access key [" + authorization + "]");
-        else
-            return getPostRecipeResponse(recipe);
+        Response response;
+        if (!UserValidator.isValid(authorization)) {
+            response = getForbiddenResponse("invalid access key [" + authorization + "]");
+        }
+        else {
+            try {
+                response = Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS, recipeManager.addRecipe(recipe))).build();
+            } catch (Exception exception) {
+                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE)).build();
+            }
+        }
+        return response;
     }
 
-    private static Response getPostRecipeResponse(Recipe recipe) {
+    public static Response buildPutRecipeResponse(String authorization, Integer recipeId, Recipe recipeUpdate) throws Exception {
         Response response;
-        try {
-            response = Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS, recipeManager.addRecipe(recipe))).build();
-        } catch (Exception exception) {
-            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE)).build();
+        if (!UserValidator.isValid(authorization, recipeId)) {
+            response = getForbiddenResponse("invalid access key [" + authorization + "] or recipe id [" + recipeId + "]");
+        }
+        else {
+            try {
+                response = Response.status(OK).entity(buildResponseBody(CONTENT_UPDATE_SUCCESS_MESSAGE, recipeManager.updateRecipe(recipeId, recipeUpdate))).build();
+            } catch (Exception exception) {
+                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE)).build();
+            }
         }
         return response;
     }

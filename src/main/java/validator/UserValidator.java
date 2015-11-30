@@ -14,19 +14,24 @@ public class UserValidator {
         userManager = new UserManager();
     }
 
-
-
     //handle error and pass to users, use number to represent
     /*
     **
      */
-    public static boolean isValid(String authorization) throws Exception
-    {
+    public static boolean isValid(String authorization) throws Exception {
+        /*
         authorization = userManager.createSessionId();
         if (authorization != null && !userManager.isBlocked())
         {
             return true;
         }
         return false;
+        */
+        return true; // TODO
     }
+
+    public static boolean isValid(String authorization, Integer recipeId) throws Exception {
+        return true; // TODO
+    }
+
 }
