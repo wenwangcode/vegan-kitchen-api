@@ -1,6 +1,8 @@
 package manager;
 
-import com.sun.media.sound.InvalidDataException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import exception.InvalidUpdateException;
 import factory.database.ConnectionFactory;
 import model.Recipe;
 import model.mapping.tables.records.RecipeRecord;
@@ -9,6 +11,7 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
 
 import static model.mapping.tables.RecipeTable.RECIPE;
@@ -64,37 +67,52 @@ public class RecipeManager {
     }
 
     public Recipe addRecipe(Recipe recipe) throws Exception {
-        Integer createRecipeId;
+        Integer createdRecipeId;
         try (Connection connection = ConnectionFactory.getConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
-            createRecipeId = recipeRecord.getRecipeId();
-            instructionManager.addRecipeInstructionList(createRecipeId, recipe.getRecipeInstructionList());
-            ingredientManager.addRecipeIngredientList(createRecipeId, recipe.getRecipeIngredientList());
+            createdRecipeId = recipeRecord.getRecipeId();
+            instructionManager.addRecipeInstructionList(createdRecipeId, recipe.getRecipeInstructionList());
+            ingredientManager.addRecipeIngredientList(createdRecipeId, recipe.getRecipeIngredientList());
         }
-        return getRecipeByID(createRecipeId);
+        return getRecipeByID(createdRecipeId);
     }
 
     public Recipe updateRecipe(Integer recipeId, Recipe recipeUpdate) throws Exception {
         Recipe exitingRecipe = getRecipeByID(recipeId);
-        updateFields(exitingRecipe, recipeUpdate);
-        return null; // TODO
+        Recipe updatedRecipe = getUpdatedRecipe(exitingRecipe, recipeUpdate);
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
+            RecipeRecord recipeRecord = create.newRecord(RECIPE, updatedRecipe);
+            create.executeUpdate(recipeRecord);
+            // TODO: update instructions
+            // TODO: update ingredients
+        }
+        return getRecipeByID(recipeId);
     }
 
-    private void updateFields(Recipe exitingRecipe, Recipe recipeUpdate) throws Exception{
-        if (recipeUpdate.getRecipeId() != null && exitingRecipe.getRecipeId().equals(recipeUpdate.getRecipeId()))
-            throw new InvalidDataException("Attempt to update existing recipe id");
-        if (recipeUpdate.getDishName() != null)
-            exitingRecipe.setDishName(recipeUpdate.getDishName());
-        if (recipeUpdate.getSummary() != null)
-            exitingRecipe.setSummary(recipeUpdate.getSummary());
-        if (recipeUpdate.getServing() != null)
-            exitingRecipe.setServing(recipeUpdate.getServing());
-        if (recipeUpdate.getDishImageUrl() != null)
-            exitingRecipe.setDishImageUrl(recipeUpdate.getDishImageUrl());
-        if (recipeUpdate.getAuthorUserId() != null)
-            exitingRecipe.setAuthorUserId(recipeUpdate.getAuthorUserId());
+    /**
+     * get an updated version of existingRecipe based on non-null fields stored in recipeUpdate
+     * @param existingRecipe : existing recipe to be updated
+     * @param recipeUpdate : recipe object that carries the update data
+     * @return : updated recipe
+     * @throws InvalidUpdateException : thrown when attempt to update immutable field / primary key (i.e. recipe_id)
+     */
+    private Recipe getUpdatedRecipe(Recipe existingRecipe, Recipe recipeUpdate) throws InvalidUpdateException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        HashMap<String, Object> exitingRecipeMap = objectMapper.convertValue(existingRecipe, new TypeReference<HashMap<String, Object>>(){});
+        HashMap<String, Object> recipeUpdateMap = objectMapper.convertValue(recipeUpdate, new TypeReference<HashMap<String, Object>>(){});
+        for (String key : recipeUpdateMap.keySet()) {
+            Object updateValue = recipeUpdateMap.get(key);
+            if (updateValue != null) {
+                if (key.equals(RECIPE.RECIPE_ID.getName())) {
+                    throw new InvalidUpdateException("Attempt to update immutable primary key: " + RECIPE.RECIPE_ID.getName());
+                }
+                exitingRecipeMap.put(key, recipeUpdateMap.get(key));
+            }
+        }
+        return objectMapper.convertValue(exitingRecipeMap, new TypeReference<Recipe>(){});
     }
 
 }

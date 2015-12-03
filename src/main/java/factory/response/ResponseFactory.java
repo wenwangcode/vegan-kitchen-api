@@ -33,6 +33,12 @@ public abstract class ResponseFactory {
         return responseBody;
     }
 
+    protected static Object buildResponseBody(String requestStatusMessage, String errorMessage) {
+        HashMap<String, Object> responseBody = new HashMap<>();
+        responseBody.put(REQUEST_STATUS_KEY, requestStatusMessage + " - " + errorMessage);
+        return responseBody;
+    }
+
     protected static Response getForbiddenResponse(String message) {
         return Response.status(Response.Status.FORBIDDEN).entity(buildResponseBody(FORBIDDEN_MESSAGE + ": " + message)).build();
     }

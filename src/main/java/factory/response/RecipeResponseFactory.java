@@ -61,7 +61,7 @@ public class RecipeResponseFactory extends ResponseFactory {
             try {
                 response = Response.status(OK).entity(buildResponseBody(CONTENT_UPDATE_SUCCESS_MESSAGE, recipeManager.updateRecipe(recipeId, recipeUpdate))).build();
             } catch (Exception exception) {
-                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE)).build();
+                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE, exception.getMessage())).build();
             }
         }
         return response;
