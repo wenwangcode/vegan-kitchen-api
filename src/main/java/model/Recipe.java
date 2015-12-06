@@ -1,11 +1,14 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by wendywang on 2015-11-07.
@@ -130,10 +133,6 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
         this.recipeInstructionList = recipeInstructionList;
     }
 
-    public void addRecipeInstructions(RecipeInstruction recipeInstruction) {
-        this.recipeInstructionList.add(recipeInstruction);
-    }
-
     @JsonProperty("recipe_ingredients")
     public List<RecipeIngredient> getRecipeIngredientList() {
         return this.recipeIngredientList;
@@ -144,7 +143,25 @@ public class Recipe extends model.mapping.tables.pojos.Recipe{
         this.recipeIngredientList = recipeIngredientList;
     }
 
-    public void addIngredients(RecipeIngredient recipeIngredient) {
+    public void addRecipeInstruction(RecipeInstruction recipeInstruction) {
+        this.recipeInstructionList.add(recipeInstruction);
+    }
+
+    public void addRecipeIngredient(RecipeIngredient recipeIngredient) {
         this.recipeIngredientList.add(recipeIngredient);
+    }
+
+    @JsonIgnore
+    public Set<Integer> getRecipeInstructionIdSet() {
+        return getRecipeInstructionList().stream()
+            .map(RecipeInstruction::getInstructionId)
+            .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    public Set<Integer> getRecipeIngredientIdSet() {
+        return getRecipeIngredientList().stream()
+            .map(RecipeIngredient::getIngredientId)
+            .collect(Collectors.toSet());
     }
 }

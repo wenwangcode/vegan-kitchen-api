@@ -34,7 +34,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RecipeIngredientTable extends TableImpl<RecipeIngredientRecord> {
 
-	private static final long serialVersionUID = 1763558853;
+	private static final long serialVersionUID = 226441929;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.recipe_ingredient</code>
@@ -72,7 +72,7 @@ public class RecipeIngredientTable extends TableImpl<RecipeIngredientRecord> {
 	/**
 	 * The column <code>vegan_kitchen_api.recipe_ingredient.image_url</code>.
 	 */
-	public final TableField<RecipeIngredientRecord, String> IMAGE_URL = createField("image_url", org.jooq.impl.SQLDataType.VARCHAR.length(225), this, "");
+	public final TableField<RecipeIngredientRecord, String> IMAGE_URL = createField("image_url", org.jooq.impl.SQLDataType.VARCHAR.length(225).nullable(false).defaulted(true), this, "");
 
 	/**
 	 * Create a <code>vegan_kitchen_api.recipe_ingredient</code> table reference

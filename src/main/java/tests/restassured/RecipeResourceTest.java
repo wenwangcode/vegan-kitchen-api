@@ -17,7 +17,6 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Created by adam on 22/11/15.
@@ -25,6 +24,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class RecipeResourceTest {
 
     private static final String POST_RECIPE_JSON_FILE = "post_recipe.json";
+    private static final String GET_RECIPE_JSON_FILE = "get_recipe.json";
+    private static final String PUT_RECIPE_JSON_FILE = "put_recipe.json";
     private static TestUtility testUtility = new TestUtility();
 
     @BeforeClass
@@ -39,82 +40,10 @@ public class RecipeResourceTest {
     }
 
     @Test
-    public void testAllRecipeOKStatus() {
-        when()
-            .get("http://localhost:8080/recipe/all")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK);
-    }
-
-    @Test
-    public void testHasCorrectDishId() {
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.recipe_id", equalTo(1));
-    }
-
-    @Test
-    public void testHasCorrectDishName() {
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.dish_name", equalTo("dish name 1"));
-    }
-
-    @Test
-    public void testHasCorrectServingSize() {
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.serving", equalTo("serving 1"));
-    }
-
-    @Test
-    public void testHasCorrectSummary() {
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.summary", equalTo("summary 1"));
-    }
-
-    @Test
-    public void testHasCorrectDishImage() {
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.dish_image_url", equalTo("dish.image.1.com"));
-    }
-
-    @Test
-    public void testHasCorrectUserId(){
-        when()
-            .get("http://localhost:8080/recipe/1")
-        .then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.author_id", equalTo(1));
-    }
-
-    @Test
-    public void testNumberOfRecipes(){
-        when()
-            .get("http://localhost:8080/recipe/all").
-        then()
-            .assertThat()
-                .statusCode(SC_OK)
-                .body("result.size()",equalTo(2));
+    public void testGetRecipe() throws Exception {
+        Recipe expectedGetRecipe = (Recipe) testUtility.getPojoFromJson(GET_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
+        Recipe actualGetRecipe = assertSuccessfulRecipeAccess(expectedGetRecipe.getRecipeId());
+        assertEqualRecipeContent(expectedGetRecipe, actualGetRecipe);
     }
 
     @Test
@@ -124,6 +53,28 @@ public class RecipeResourceTest {
         Recipe expectedPostRecipe = (Recipe) testUtility.getPojoFromJson(POST_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
         Recipe actualPostRecipe = assertSuccessfulRecipeCreation(authorization, expectedPostRecipeJsonString);
         assertEqualRecipeContent(expectedPostRecipe, actualPostRecipe);
+    }
+
+    @Test
+    public void testPutRecipe() throws Exception {
+        int putRecipeId = 2;
+        String authorization = ""; // TODO: require login function
+        String putRecipeJsonString = testUtility.getStringFromJson(PUT_RECIPE_JSON_FILE);
+        Recipe expectedPutRecipe = (Recipe) testUtility.getPojoFromJson(PUT_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
+        Recipe actualPutRecipe = assertSuccessPutRecipeUpdate(authorization, putRecipeId, putRecipeJsonString);
+        assertEqualRecipeContent(expectedPutRecipe, actualPutRecipe);
+    }
+
+    private Recipe assertSuccessfulRecipeAccess(int recipeId) throws Exception {
+        Map<String, Object> recipeMap =
+            when()
+                .get("http://localhost:8080/recipe/" + String.valueOf(recipeId))
+            .then()
+                .assertThat()
+                    .statusCode(SC_OK)
+                .extract()
+                    .response().path("result");
+        return (Recipe) testUtility.getPojoFromMap(recipeMap, new TypeReference<Recipe>(){});
     }
 
     private Recipe assertSuccessfulRecipeCreation(String authorization, String recipeJsonString) throws Exception {
@@ -140,6 +91,22 @@ public class RecipeResourceTest {
                 .extract()
                     .response().path("result");
         return (Recipe) testUtility.getPojoFromMap(createdRecipeMap, new TypeReference<Recipe>(){});
+    }
+
+    private Recipe assertSuccessPutRecipeUpdate(String authorization, int recipeId, String recipeJsonString) throws Exception {
+        Map<String, Object> putRecipeMap =
+            given()
+                .header("authorization", authorization)
+                .contentType("application/json")
+                .body(recipeJsonString)
+            .when()
+                .put("http://localhost:8080/recipe/" + String.valueOf(recipeId))
+            .then()
+                .assertThat()
+                    .statusCode(SC_OK)
+                .extract()
+                    .response().path("result");
+        return (Recipe) testUtility.getPojoFromMap(putRecipeMap, new TypeReference<Recipe>(){});
     }
 
     private void assertEqualRecipeContent(Recipe expectedRecipe, Recipe actualRecipe) {

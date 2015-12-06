@@ -1,0 +1,42 @@
+{
+  "recipe_id": 2,
+  "dish_name": "updated dish name 2",
+  "summary": "updated summary 2",
+  "serving": "updated serving 2",
+  "dish_image_url": "updated.dish.image.2.com",
+  "author_id": 2,
+  "recipe_instructions": [
+    {
+      "instruction_id": 3,
+      "step_number": 11,
+      "instruction": "updated instruction 1",
+      "image_url": "updated instruction3.com"
+    },
+    {
+      "instruction_id": 4,
+      "step_number": 12,
+      "instruction": "updated instruction 2",
+      "image_url": "updated instruction4.com"
+    },
+    {
+      "instruction_id": 5,
+      "step_number": 13,
+      "instruction": "updated instruction 3",
+      "image_url": "updated instruction5.com"
+    }
+  ],
+  "recipe_ingredients": [
+    {
+      "ingredient_id": 4,
+      "name": "updated ingredient 4",
+      "amount": "updated 40 tons",
+      "image_url": "updated.ingredient4.com"
+    },
+    {
+      "ingredient_id": 5,
+      "name": "updated ingredient 5",
+      "amount": "updated 50 tons",
+      "image_url": "updated.ingredient5.com"
+    }
+  ]
+}

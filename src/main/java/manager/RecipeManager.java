@@ -1,18 +1,19 @@
 package manager;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import exception.InvalidDataException;
 import exception.InvalidUpdateException;
 import factory.database.ConnectionFactory;
 import model.Recipe;
 import model.mapping.tables.records.RecipeRecord;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import static model.mapping.tables.RecipeTable.RECIPE;
 
@@ -22,6 +23,7 @@ import static model.mapping.tables.RecipeTable.RECIPE;
 
 public class RecipeManager {
 
+    ObjectMapper objectMapper = new ObjectMapper();
     RecipeInstructionManager instructionManager = new RecipeInstructionManager();
     RecipeIngredientManager ingredientManager = new RecipeIngredientManager();
 
@@ -32,6 +34,9 @@ public class RecipeManager {
             attachRecipeInstruction(recipeList);
             attachRecipeIngredient(recipeList);
             return recipeList;
+        }
+        catch (Exception exception) {
+            throw new DataAccessException("Failed to get recipes due to: " + exception.getMessage());
         }
     }
 
@@ -47,14 +52,17 @@ public class RecipeManager {
         }
     }
 
-    public Recipe getRecipeByID(int recipeID) throws Exception {
+    public Recipe getRecipeById(int recipeId) throws Exception {
         try(Connection connection = ConnectionFactory.getConnection()) {
             Recipe returnRecipe;
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            returnRecipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeID)).fetchAny().into(Recipe.class);
+            returnRecipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeId)).fetchAny().into(Recipe.class);
             attachRecipeInstruction(returnRecipe);
             attachRecipeIngredient(returnRecipe);
             return returnRecipe;
+        }
+        catch (Exception exception) {
+            throw new DataAccessException("Failed to get recipe with recipe id [" + recipeId + "] due to: " + exception.getMessage());
         }
     }
 
@@ -76,43 +84,58 @@ public class RecipeManager {
             instructionManager.addRecipeInstructionList(createdRecipeId, recipe.getRecipeInstructionList());
             ingredientManager.addRecipeIngredientList(createdRecipeId, recipe.getRecipeIngredientList());
         }
-        return getRecipeByID(createdRecipeId);
+        catch (Exception exception) {
+            throw new InvalidDataException("Failed to create recipe due to: " + exception.getMessage());
+        }
+        return getRecipeById(createdRecipeId);
     }
 
     public Recipe updateRecipe(Integer recipeId, Recipe recipeUpdate) throws Exception {
-        Recipe exitingRecipe = getRecipeByID(recipeId);
-        Recipe updatedRecipe = getUpdatedRecipe(exitingRecipe, recipeUpdate);
-        try (Connection connection = ConnectionFactory.getConnection()) {
-            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            RecipeRecord recipeRecord = create.newRecord(RECIPE, updatedRecipe);
-            create.executeUpdate(recipeRecord);
-            // TODO: update instructions
-            // TODO: update ingredients
-        }
-        return getRecipeByID(recipeId);
-    }
-
-    /**
-     * get an updated version of existingRecipe based on non-null fields stored in recipeUpdate
-     * @param existingRecipe : existing recipe to be updated
-     * @param recipeUpdate : recipe object that carries the update data
-     * @return : updated recipe
-     * @throws InvalidUpdateException : thrown when attempt to update immutable field / primary key (i.e. recipe_id)
-     */
-    private Recipe getUpdatedRecipe(Recipe existingRecipe, Recipe recipeUpdate) throws InvalidUpdateException{
-        ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> exitingRecipeMap = objectMapper.convertValue(existingRecipe, new TypeReference<HashMap<String, Object>>(){});
-        HashMap<String, Object> recipeUpdateMap = objectMapper.convertValue(recipeUpdate, new TypeReference<HashMap<String, Object>>(){});
-        for (String key : recipeUpdateMap.keySet()) {
-            Object updateValue = recipeUpdateMap.get(key);
-            if (updateValue != null) {
-                if (key.equals(RECIPE.RECIPE_ID.getName())) {
-                    throw new InvalidUpdateException("Attempt to update immutable primary key: " + RECIPE.RECIPE_ID.getName());
-                }
-                exitingRecipeMap.put(key, recipeUpdateMap.get(key));
+        if (isValidRecipeUpdate(recipeId, recipeUpdate)) {
+            try (Connection connection = ConnectionFactory.getConnection()) {
+                DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
+                RecipeRecord recipeRecord = create.newRecord(RECIPE, recipeUpdate);
+                create.batchUpdate(recipeRecord).execute();
+                instructionManager.putRecipeInstructionList(recipeUpdate.getRecipeInstructionList());
+                ingredientManager.putRecipeIngredientList(recipeUpdate.getRecipeIngredientList());
+            } catch (Exception exception) {
+                throw new InvalidDataException("Failed to update recipe with recipe id [" + recipeId + "] due to: " + exception.getMessage());
             }
         }
-        return objectMapper.convertValue(exitingRecipeMap, new TypeReference<Recipe>(){});
+        return getRecipeById(recipeId);
+    }
+
+    private boolean isValidRecipeUpdate(Integer recipeId, Recipe recipeUpdate) throws Exception {
+        try {
+            Recipe existingRecipe = getRecipeById(recipeId);
+            if (containRecipeIdUpdate(recipeUpdate)) {
+                throw new InvalidUpdateException("Invalid recipe update: attempt to update immutable recipe id.");
+            }
+            else if (!isConsistentInstructionIdSet(existingRecipe.getRecipeInstructionIdSet(), recipeUpdate.getRecipeInstructionIdSet())) {
+                throw new InvalidUpdateException("Invalid recipe update: instruction id(s) not found.");
+            }
+            else if (!isConsistentIngredientIdSet(existingRecipe.getRecipeIngredientIdSet(), recipeUpdate.getRecipeIngredientIdSet())) {
+                throw new InvalidUpdateException("Invalid recipe update: ingredient id(s) not found.");
+            }
+            return true;
+        }
+        catch (DataAccessException dataAccessException) {
+            throw new InvalidUpdateException("Invalid recipe update: no recipe id[" + recipeId + "] found.");
+        }
+    }
+
+    private boolean containRecipeIdUpdate(Recipe recipeUpdate) {
+        return recipeUpdate.getRecipeId() != null &&
+            recipeUpdate.getRecipeInstructionList().stream().anyMatch(instruction -> instruction.getRecipeId() != null) &&
+            recipeUpdate.getRecipeIngredientList().stream().anyMatch(ingredient -> ingredient.getRecipeId() != null);
+    }
+
+    private boolean isConsistentInstructionIdSet(Set<Integer> existingInstructionSet, Set<Integer> instructionUpdateSet) {
+        return existingInstructionSet.containsAll(instructionUpdateSet);
+    }
+
+    private boolean isConsistentIngredientIdSet(Set<Integer> existingIngredientSet, Set<Integer> ingredientUpdateSet) {
+        return existingIngredientSet.containsAll(ingredientUpdateSet);
     }
 
 }

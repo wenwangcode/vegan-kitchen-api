@@ -19,7 +19,7 @@ public class TestUtility {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    private String TEST_DATA_PATH = "../resources/jsons/";
+    private String TEST_DATA_PATH = "../resources/test_data/";
     private String PROPERTIES_FILE = "testconfig/test.config.properties";
     private String connectionUrl;
     private String mysqlConnectorDriver;

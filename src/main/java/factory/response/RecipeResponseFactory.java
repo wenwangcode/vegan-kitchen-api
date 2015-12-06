@@ -29,7 +29,7 @@ public class RecipeResponseFactory extends ResponseFactory {
     public static Response buildGetRecipeByIdResponse(Integer recipeId) throws Exception {
         Response response;
         try {
-            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipeByID(recipeId))).build();
+            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipeById(recipeId))).build();
         }
         catch (Exception exception) {
             response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE)).build();

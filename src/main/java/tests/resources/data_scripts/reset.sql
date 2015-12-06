@@ -15,7 +15,7 @@ CREATE TABLE recipe_instruction (
   instruction_id INT UNIQUE NOT NULL AUTO_INCREMENT,
   step_number int NOT NULL,
   instruction VARCHAR(255) NOT NULL,
-  image_url VARCHAR(255),
+  image_url VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (instruction_id)
 );
 CREATE TABLE recipe_ingredient (
@@ -23,7 +23,7 @@ CREATE TABLE recipe_ingredient (
   ingredient_id INT UNIQUE NOT NULL AUTO_INCREMENT,
   name VARCHAR(50) NOT NULL,
   amount VARCHAR(50) NOT NULL,
-  image_url VARCHAR(225),
+  image_url VARCHAR(225) NOT NULL DEFAULT '',
   PRIMARY KEY (ingredient_id)
 );
 CREATE TABLE user (
@@ -31,18 +31,18 @@ CREATE TABLE user (
   user_name VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  is_blocked BOOL,
+  is_blocked BOOL NOT NULL DEFAULT FALSE,
   PRIMARY KEY (user_id)
 );
 CREATE TABLE logging (
   user_id INT UNIQUE NOT NULL,
   session_id VARCHAR(255) UNIQUE NOT NULL,
-  exception VARCHAR(225),
-  message VARCHAR(500)
+  exception VARCHAR(225) NOT NULL DEFAULT '',
+  message VARCHAR(500) NOT NULL DEFAULT ''
 );
 CREATE TABLE user_attempt (
   user_id INT UNIQUE NOT NULL,
-  attempt_number INT,
-  message VARCHAR(225),
+  attempt_number INT NOT NULL DEFAULT 0,
+  message VARCHAR(225) NOT NULL DEFAULT '',
   session_id VARCHAR(225) UNIQUE NOT NULL
 )

@@ -33,7 +33,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UserAttemptTable extends TableImpl<UserAttemptRecord> {
 
-	private static final long serialVersionUID = 1428360404;
+	private static final long serialVersionUID = -1745152820;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api.user_attempt</code>
@@ -56,12 +56,12 @@ public class UserAttemptTable extends TableImpl<UserAttemptRecord> {
 	/**
 	 * The column <code>vegan_kitchen_api.user_attempt.attempt_number</code>.
 	 */
-	public final TableField<UserAttemptRecord, Integer> ATTEMPT_NUMBER = createField("attempt_number", org.jooq.impl.SQLDataType.INTEGER, this, "");
+	public final TableField<UserAttemptRecord, Integer> ATTEMPT_NUMBER = createField("attempt_number", org.jooq.impl.SQLDataType.INTEGER.nullable(false).defaulted(true), this, "");
 
 	/**
 	 * The column <code>vegan_kitchen_api.user_attempt.message</code>.
 	 */
-	public final TableField<UserAttemptRecord, String> MESSAGE = createField("message", org.jooq.impl.SQLDataType.VARCHAR.length(225), this, "");
+	public final TableField<UserAttemptRecord, String> MESSAGE = createField("message", org.jooq.impl.SQLDataType.VARCHAR.length(225).nullable(false).defaulted(true), this, "");
 
 	/**
 	 * The column <code>vegan_kitchen_api.user_attempt.session_id</code>.
