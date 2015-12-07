@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -52,6 +51,11 @@ public class TestUtility {
         runSQLScript("reset.sql");
     }
 
+    public void resetTestData(String testDataSetupScript) throws Exception {
+        runSQLScript("reset.sql");
+        runSQLScript(testDataSetupScript);
+    }
+
     public void runSQLScript(String sqlScript) throws Exception{
         try (Connection connection = getDatabaseConnection()) {
             ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
@@ -61,17 +65,17 @@ public class TestUtility {
         }
     }
 
-    public String getStringFromJson(String fileName) throws Exception {
+    public String getStringFromFile(String fileName) throws Exception {
         return IOUtil.toString(this.getClass().getResourceAsStream(TEST_DATA_PATH + fileName));
     }
 
-    public Object getPojoFromJson(String fileName, TypeReference typeReference) throws Exception {
-        String jsonString = getStringFromJson(fileName);
+    public Object getPojoFromFile(String fileName, TypeReference typeReference) throws Exception {
+        String jsonString = getStringFromFile(fileName);
         return objectMapper.readValue(jsonString, typeReference);
     }
 
-    public Object getPojoFromMap(Map<String, Object> map, TypeReference typeReference) throws Exception {
-        return objectMapper.convertValue(map, typeReference);
+    public Object convertObjectByReferenceType(Object object, TypeReference typeReference) throws Exception {
+        return objectMapper.convertValue(object, typeReference);
     }
 
 }

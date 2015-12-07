@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import model.Recipe;
 import model.RecipeIngredient;
 import model.RecipeInstruction;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.Test;
 import utility.TestUtility;
 
@@ -15,23 +15,28 @@ import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 
 /**
  * Created by adam on 22/11/15.
  */
 public class RecipeResourceTest {
 
+    // URL
+    private static final String BASE_URL = "http://localhost:8080/recipe/";
+
+    // test data
+    private static final String TEST_DATA_SETUP_SCRIPT = "recipe_resource_test.sql";
     private static final String POST_RECIPE_JSON_FILE = "post_recipe.json";
+    private static final String GET_ALL_RECIPES_JSON_FILE = "get_all_recipes.json";
     private static final String GET_RECIPE_JSON_FILE = "get_recipe.json";
     private static final String PUT_RECIPE_JSON_FILE = "put_recipe.json";
+
     private static TestUtility testUtility = new TestUtility();
 
     @BeforeClass
     public static void setUp() throws Exception {
-        testUtility.resetDataBase();
-        testUtility.runSQLScript("recipe_resource_test.sql");
+        testUtility.resetTestData(TEST_DATA_SETUP_SCRIPT);
     }
 
     @AfterClass
@@ -40,8 +45,18 @@ public class RecipeResourceTest {
     }
 
     @Test
-    public void testGetRecipe() throws Exception {
-        Recipe expectedGetRecipe = (Recipe) testUtility.getPojoFromJson(GET_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
+    public void testGetAllRecipes() throws Exception {
+        testUtility.resetTestData(TEST_DATA_SETUP_SCRIPT);
+        List<Recipe>  actualRecipeList = assertSuccessfulAllRecipesAccess();
+        List<Recipe> expectedRecipeList = (List<Recipe>) testUtility.getPojoFromFile(GET_ALL_RECIPES_JSON_FILE, new TypeReference<List<Recipe>>(){});
+        for (int i = 0; i < actualRecipeList.size(); i++) {
+            assertEqualRecipeContent(expectedRecipeList.get(i), actualRecipeList.get(i));
+        }
+    }
+
+    @Test
+    public void testGetRecipeById() throws Exception {
+        Recipe expectedGetRecipe = (Recipe) testUtility.getPojoFromFile(GET_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
         Recipe actualGetRecipe = assertSuccessfulRecipeAccess(expectedGetRecipe.getRecipeId());
         assertEqualRecipeContent(expectedGetRecipe, actualGetRecipe);
     }
@@ -49,32 +64,51 @@ public class RecipeResourceTest {
     @Test
     public void testPostRecipe() throws Exception {
         String authorization = "";  // TODO: require login function
-        String expectedPostRecipeJsonString = testUtility.getStringFromJson(POST_RECIPE_JSON_FILE);
-        Recipe expectedPostRecipe = (Recipe) testUtility.getPojoFromJson(POST_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
+        String expectedPostRecipeJsonString = testUtility.getStringFromFile(POST_RECIPE_JSON_FILE);
+        Recipe expectedPostRecipe = (Recipe) testUtility.getPojoFromFile(POST_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
         Recipe actualPostRecipe = assertSuccessfulRecipeCreation(authorization, expectedPostRecipeJsonString);
         assertEqualRecipeContent(expectedPostRecipe, actualPostRecipe);
     }
 
     @Test
     public void testPutRecipe() throws Exception {
-        int putRecipeId = 2;
         String authorization = ""; // TODO: require login function
-        String putRecipeJsonString = testUtility.getStringFromJson(PUT_RECIPE_JSON_FILE);
-        Recipe expectedPutRecipe = (Recipe) testUtility.getPojoFromJson(PUT_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
-        Recipe actualPutRecipe = assertSuccessPutRecipeUpdate(authorization, putRecipeId, putRecipeJsonString);
+        String putRecipeJsonString = testUtility.getStringFromFile(PUT_RECIPE_JSON_FILE);
+        Recipe expectedPutRecipe = (Recipe) testUtility.getPojoFromFile(PUT_RECIPE_JSON_FILE, new TypeReference<Recipe>(){});
+        Recipe actualPutRecipe = assertSuccessPutRecipeUpdate(authorization, expectedPutRecipe.getRecipeId(), putRecipeJsonString);
         assertEqualRecipeContent(expectedPutRecipe, actualPutRecipe);
+    }
+
+    private List<Recipe> assertSuccessfulAllRecipesAccess() throws Exception {
+        List<Map<String, Object>> recipeMapList =
+                when()
+                        .get(BASE_URL + "all/")
+                        .then()
+                        .assertThat()
+                        .statusCode(SC_OK)
+                        .extract()
+                        .response().path("result");
+        return (List<Recipe>) testUtility.convertObjectByReferenceType(recipeMapList, new TypeReference<List<Recipe>>(){});
+    }
+
+    private void assertFailAllRecipesAccess(int expectedStatusCode) throws Exception {
+        when()
+            .get(BASE_URL + "all/")
+        .then()
+            .assertThat()
+                .statusCode(expectedStatusCode);
     }
 
     private Recipe assertSuccessfulRecipeAccess(int recipeId) throws Exception {
         Map<String, Object> recipeMap =
             when()
-                .get("http://localhost:8080/recipe/" + String.valueOf(recipeId))
+                .get(BASE_URL + String.valueOf(recipeId))
             .then()
                 .assertThat()
                     .statusCode(SC_OK)
                 .extract()
                     .response().path("result");
-        return (Recipe) testUtility.getPojoFromMap(recipeMap, new TypeReference<Recipe>(){});
+        return (Recipe) testUtility.convertObjectByReferenceType(recipeMap, new TypeReference<Recipe>(){});
     }
 
     private Recipe assertSuccessfulRecipeCreation(String authorization, String recipeJsonString) throws Exception {
@@ -84,13 +118,13 @@ public class RecipeResourceTest {
                 .contentType("application/json")
                 .body(recipeJsonString)
             .when()
-                .post("http://localhost:8080/recipe/")
+                .post(BASE_URL)
             .then()
                 .assertThat()
                     .statusCode(SC_CREATED)
                 .extract()
                     .response().path("result");
-        return (Recipe) testUtility.getPojoFromMap(createdRecipeMap, new TypeReference<Recipe>(){});
+        return (Recipe) testUtility.convertObjectByReferenceType(createdRecipeMap, new TypeReference<Recipe>(){});
     }
 
     private Recipe assertSuccessPutRecipeUpdate(String authorization, int recipeId, String recipeJsonString) throws Exception {
@@ -100,13 +134,13 @@ public class RecipeResourceTest {
                 .contentType("application/json")
                 .body(recipeJsonString)
             .when()
-                .put("http://localhost:8080/recipe/" + String.valueOf(recipeId))
+                .put(BASE_URL + String.valueOf(recipeId))
             .then()
                 .assertThat()
                     .statusCode(SC_OK)
                 .extract()
                     .response().path("result");
-        return (Recipe) testUtility.getPojoFromMap(putRecipeMap, new TypeReference<Recipe>(){});
+        return (Recipe) testUtility.convertObjectByReferenceType(putRecipeMap, new TypeReference<Recipe>(){});
     }
 
     private void assertEqualRecipeContent(Recipe expectedRecipe, Recipe actualRecipe) {

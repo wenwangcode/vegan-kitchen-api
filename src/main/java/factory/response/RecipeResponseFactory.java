@@ -1,5 +1,6 @@
 package factory.response;
 
+import exception.DatabaseException;
 import manager.RecipeManager;
 import model.Recipe;
 import validator.UserValidator;
@@ -20,8 +21,8 @@ public class RecipeResponseFactory extends ResponseFactory {
         try {
             response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipes())).build();
         }
-        catch (Exception exception) {
-            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE)).build();
+        catch (DatabaseException exception) {
+            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE, exception.getMessage())).build();
         }
         return response;
     }
@@ -31,8 +32,8 @@ public class RecipeResponseFactory extends ResponseFactory {
         try {
             response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipeById(recipeId))).build();
         }
-        catch (Exception exception) {
-            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE)).build();
+        catch (DatabaseException exception) {
+            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE, exception.getMessage())).build();
         }
         return response;
     }
@@ -45,8 +46,8 @@ public class RecipeResponseFactory extends ResponseFactory {
         else {
             try {
                 response = Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS, recipeManager.addRecipe(recipe))).build();
-            } catch (Exception exception) {
-                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE)).build();
+            } catch (DatabaseException exception) {
+                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE, exception.getMessage())).build();
             }
         }
         return response;
@@ -60,7 +61,7 @@ public class RecipeResponseFactory extends ResponseFactory {
         else {
             try {
                 response = Response.status(OK).entity(buildResponseBody(CONTENT_UPDATE_SUCCESS_MESSAGE, recipeManager.updateRecipe(recipeId, recipeUpdate))).build();
-            } catch (Exception exception) {
+            } catch (DatabaseException exception) {
                 response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE, exception.getMessage())).build();
             }
         }
