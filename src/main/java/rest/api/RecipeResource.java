@@ -1,11 +1,13 @@
 package rest.api;
 
+import application.context.SecurityContext;
 import application.filter.Authentication;
 import factory.response.RecipeResponseFactory;
 import model.Recipe;
 
 import javax.inject.Singleton;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 @Path("recipe")
@@ -46,7 +48,8 @@ public class  RecipeResource {
     @DELETE
     @Path("{recipe_id}")
     @Authentication
-    public Response deleteRecipe(@PathParam("recipe_id") Integer recipeId) {
+    public Response deleteRecipe(@PathParam("recipe_id") Integer recipeId, @Context SecurityContext securityContext) {
+        securityContext.getUserPrincipal();
         return null; // TODO
     }
 

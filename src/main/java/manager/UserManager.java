@@ -38,7 +38,7 @@ public class UserManager {
      * @return user object
      * @throws DatabaseException
      */
-    private User getUser(String userName, String password) throws DatabaseException {
+    public User getUser(String userName, String password) throws DatabaseException {
         try {
             Condition condition = USER.USER_NAME.equal(userName).and(USER.PASSWORD.equal(getEncryptPassword(password)));
             return DataObjectFactory.getDataObject(USER, condition, User.class);
@@ -48,9 +48,14 @@ public class UserManager {
         }
     }
 
-    private User getUser(String authorizationToken) throws DatabaseException {
+    /**
+     * get user object based on user authorization token
+     * @param authorizationToken : authorization token of the user's login session
+     * @return return the corresponding user object if the authorization token is valid
+     * @throws DatabaseException
+     */
+    public User getUser(String authorizationToken) throws DatabaseException {
         // TODO
-
         return null;
     }
 
@@ -75,7 +80,7 @@ public class UserManager {
      * @param authorization : authorization token issued in user login
      */
     public void authenticateUser(String authorization) {
-
+        // TODO
     }
 
     /**
@@ -109,7 +114,7 @@ public class UserManager {
         User user = getUser(userName, password);
         user.setAuthorizationToken(generateAuthorizationToken());
         user.setLastAccess(UInteger.valueOf(System.currentTimeMillis() / 1000L));
-        DataObjectFactory.storeDataObject(USER, user);
+        DataObjectFactory.updateDataObject(USER, user);
         return user.getAuthorizationToken();
     }
 
@@ -125,6 +130,12 @@ public class UserManager {
         // store the updated user object back into the database
     }
 
+    /**
+     * throw exception if the new user's information is invalid and cannot be created
+     * @param user : new user
+     * @throws InvalidUserCreationException
+     * @throws DatabaseException
+     */
     public void validateNewUser(User user) throws InvalidUserCreationException, DatabaseException {
         if (!isEmail(user.getEmail())) {
             throw new InvalidUserCreationException("invalid email format.");
@@ -137,16 +148,32 @@ public class UserManager {
         }
     }
 
+    /**
+     * return true if the supplied email is valid
+     * @param email : email string
+     * @return
+     */
     private boolean isEmail(String email) {
         return email.toUpperCase().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
     }
 
+    /**
+     * return true if the supplied password is valid
+     * @param password : password string
+     * @return
+     */
     private boolean isValidPassword(String password) {
         return password.length() > MINIMUM_PASSWORD_LENGTH && password.length() < MAXIMUM_PASSWORD_LENGTH;
     }
 
+    /**
+     * generate a new authorization token
+     * @return : authorization token string
+     */
     private String generateAuthorizationToken() {
-        return new BigInteger(130, secureRandom).toString(32);
+        int numberOfBits = 130;
+        int authorizationTokenLength = 32;
+        return new BigInteger(numberOfBits, secureRandom).toString(authorizationTokenLength);
     }
 
 }

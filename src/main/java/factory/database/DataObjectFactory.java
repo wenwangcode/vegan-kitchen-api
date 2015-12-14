@@ -44,6 +44,16 @@ public class DataObjectFactory {
         }
     }
 
+    public static <R extends UpdatableRecordImpl> void updateDataObject(Table<R> table, Object newObject) throws DatabaseException {
+        try (Connection connection = getDatabaseConnection()) {
+            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
+            create.batchUpdate(create.newRecord(table, newObject)).execute();
+        }
+        catch (Exception exception) {
+            throw new DatabaseException("Database error: " + exception.getMessage());
+        }
+    }
+
     public static <R extends UpdatableRecordImpl> void storeDataObject(Table<R> table, Object newObject) throws DatabaseException {
         try (Connection connection = getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);

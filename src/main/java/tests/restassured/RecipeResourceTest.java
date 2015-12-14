@@ -82,12 +82,12 @@ public class RecipeResourceTest {
     private List<Recipe> assertSuccessfulAllRecipesAccess() throws Exception {
         List<Map<String, Object>> recipeMapList =
                 when()
-                        .get(BASE_URL + "all/")
-                        .then()
-                        .assertThat()
+                    .get(BASE_URL + "all/")
+                .then()
+                    .assertThat()
                         .statusCode(SC_OK)
-                        .extract()
-                        .response().path("result");
+                .extract()
+                    .response().path("result");
         return (List<Recipe>) testUtility.convertObjectByReferenceType(recipeMapList, new TypeReference<List<Recipe>>(){});
     }
 

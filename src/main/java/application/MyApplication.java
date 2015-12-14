@@ -29,7 +29,6 @@ public class MyApplication extends ResourceConfig {
 
     public MyApplication() {
         packages(true, "rest.api", "application.filter");
-        //register(AuthenticationFilter.class);
         loadConfiguration();
     }
 
