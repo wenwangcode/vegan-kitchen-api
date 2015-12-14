@@ -38,7 +38,7 @@ public class UserManager {
      * @return user object
      * @throws DatabaseException
      */
-    private User getUser(String userName, String password) throws DatabaseException {
+    public User getUser(String userName, String password) throws DatabaseException {
         try {
             Condition condition = USER.USER_NAME.equal(userName).and(USER.PASSWORD.equal(getEncryptPassword(password)));
             return DataObjectFactory.getDataObject(USER, condition, User.class);
@@ -48,14 +48,9 @@ public class UserManager {
         }
     }
 
-    private User getUser(String authorizationToken) throws DatabaseException {
-        try {
-            Condition condition = USER.AUTHORIZATION_TOKEN.equal(authorizationToken);
-            return DataObjectFactory.getDataObject(USER, condition, User.class);
-        }
-        catch (Exception exception) {
-            throw new DatabaseException("Unable access user data due unmatched authorization error.");
-        }
+    public User getUser(String authorizationToken) throws DatabaseException {
+        Condition condition = USER.AUTHORIZATION_TOKEN.equal(authorizationToken);
+        return DataObjectFactory.getDataObject(USER, condition, User.class);
     }
 
     /**
