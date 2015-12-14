@@ -122,12 +122,11 @@ public class UserManager {
      * end a login session
      * @param authorization : authorization token of existing session
      */
-    public void logout(String authorization) throws SessionNotFoundException {
-        // TODO
-        // user get user to verify authorization token
-        // set the current authorization token to empty string
-        // update last access time
-        // store the updated user object back into the database
+    public void logout(String authorization) throws DatabaseException{
+        User user = getUser(authorization);
+        user.setAuthorizationToken("");
+        user.setLastAccess(UInteger.valueOf(System.currentTimeMillis() / 1000L));
+        DataObjectFactory.updateDataObject(USER, user);
     }
 
     /**

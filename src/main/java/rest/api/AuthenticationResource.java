@@ -35,10 +35,9 @@ public class AuthenticationResource {
 
     @POST
     @Path("logout")
+    @Produces("application/json")
     public Response logout(@HeaderParam("Authorization") String authorization) {
-        // TODO
-        // build the correct response
-        return null;
+        return responseFactory.buildUserLogoutResponse(authorization);
     }
 
 }

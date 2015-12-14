@@ -58,7 +58,7 @@ public class AuthenticationResponseFactory extends ResponseFactory {
             userManager.logout(authorizationToken);
             response = Response.status(NO_CONTENT).entity(buildResponseBody(SESSION_END_SUCCESS)).build();
 
-        } catch (SessionNotFoundException e) {
+        } catch (DatabaseException e) {
             response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE, e.getMessage())).build();
         }
 
