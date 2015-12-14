@@ -47,7 +47,7 @@ public class UserManager {
             throw new DatabaseException("Unable access user data due to password encryption error.");
         }
     }
-
+    
     /**
      * get user object based on user authorization token
      * @param authorizationToken : authorization token of the user's login session
@@ -55,8 +55,8 @@ public class UserManager {
      * @throws DatabaseException
      */
     public User getUser(String authorizationToken) throws DatabaseException {
-        // TODO
-        return null;
+        Condition condition = USER.AUTHORIZATION_TOKEN.equal(authorizationToken);
+        return DataObjectFactory.getDataObject(USER, condition, User.class);
     }
 
     /**

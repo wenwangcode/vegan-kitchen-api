@@ -13,7 +13,9 @@ public abstract class ResponseFactory {
     private static final String RESPONSE_RESULT_KEY = "result";
 
     protected static final String SESSION_CREATION_SUCCESS = "Login session created.";
+    protected static final String SESSION_END_SUCCESS = "Session ended successfully";
 
+    protected static final String SESSION_END_FAIULRE = "Failed to end session";
     protected static final String FORBIDDEN_MESSAGE = "Lack permission to perform action.";
     protected static final String CONTENT_RETRIEVAL_SUCCESS = "Content retrieval success.";
     protected static final String CONTENT_RETRIEVAL_FAILURE  = "Content retrieval failed.";
