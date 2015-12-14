@@ -3,9 +3,9 @@ package factory.response;
 import exception.DatabaseException;
 import manager.RecipeManager;
 import model.Recipe;
-import validator.UserValidator;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.*;
 
@@ -19,7 +19,8 @@ public class RecipeResponseFactory extends ResponseFactory {
     public static Response buildGetAllRecipeResponse() throws Exception {
         Response response;
         try {
-            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipes())).build();
+            List<Recipe> recipeList = recipeManager.getRecipes();
+            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeList)).build();
         }
         catch (DatabaseException exception) {
             response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE, exception.getMessage())).build();
@@ -30,7 +31,8 @@ public class RecipeResponseFactory extends ResponseFactory {
     public static Response buildGetRecipeByIdResponse(Integer recipeId) throws Exception {
         Response response;
         try {
-            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipeManager.getRecipeById(recipeId))).build();
+            Recipe recipe = recipeManager.getRecipeById(recipeId);
+            response = Response.status(OK).entity(buildResponseBody(CONTENT_RETRIEVAL_SUCCESS, recipe)).build();
         }
         catch (DatabaseException exception) {
             response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_RETRIEVAL_FAILURE, exception.getMessage())).build();
@@ -38,34 +40,30 @@ public class RecipeResponseFactory extends ResponseFactory {
         return response;
     }
 
-    public static Response buildPostRecipeResponse(String authorization, Recipe recipe) throws Exception {
+    public static Response buildPostRecipeResponse(Recipe recipe) throws Exception {
         Response response;
-        if (!UserValidator.isValid(authorization)) {
-            response = getForbiddenResponse("invalid access key [" + authorization + "]");
-        }
-        else {
-            try {
-                response = Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS, recipeManager.addRecipe(recipe))).build();
-            } catch (DatabaseException exception) {
-                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE, exception.getMessage())).build();
-            }
+        try {
+            Recipe createdRecipe = recipeManager.addRecipe(recipe);
+            response = Response.status(CREATED).entity(buildResponseBody(CONTENT_CREATION_SUCCESS, createdRecipe)).build();
+        } catch (DatabaseException exception) {
+            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_CREATION_FAILURE, exception.getMessage())).build();
         }
         return response;
     }
 
-    public static Response buildPutRecipeResponse(String authorization, Integer recipeId, Recipe recipeUpdate) throws Exception {
+    public static Response buildPutRecipeResponse(Integer recipeId, Recipe recipeUpdate) throws Exception {
         Response response;
-        if (!UserValidator.isValid(authorization, recipeId)) {
-            response = getForbiddenResponse("invalid access key [" + authorization + "] or recipe id [" + recipeId + "]");
-        }
-        else {
-            try {
-                response = Response.status(OK).entity(buildResponseBody(CONTENT_UPDATE_SUCCESS_MESSAGE, recipeManager.updateRecipe(recipeId, recipeUpdate))).build();
-            } catch (DatabaseException exception) {
-                response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE, exception.getMessage())).build();
-            }
+        try {
+            Recipe updatedRecipe = recipeManager.updateRecipe(recipeId, recipeUpdate);
+            response = Response.status(OK).entity(buildResponseBody(CONTENT_UPDATE_SUCCESS_MESSAGE, updatedRecipe)).build();
+        } catch (DatabaseException exception) {
+            response = Response.status(BAD_REQUEST).entity(buildResponseBody(CONTENT_UPDATE_FAIL_MESSAGE, exception.getMessage())).build();
         }
         return response;
+    }
+
+    public static Response buildDeleteRecipeResponse(Integer recipeId) throws Exception {
+        return null; // TODO
     }
 
 }

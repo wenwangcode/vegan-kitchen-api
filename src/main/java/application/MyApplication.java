@@ -1,19 +1,16 @@
 package application;
 
-import rest.api.RecipeResource;
+import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Created by wendywang on 2015-11-07.
  */
 @ApplicationPath("/")
-public class MyApplication extends Application{
+public class MyApplication extends ResourceConfig {
 
     public static final String PROPERTIES_FILE = "config.properties";
     public static Properties properties = new Properties();
@@ -30,12 +27,10 @@ public class MyApplication extends Application{
         return properties;
     }
 
-    @Override
-    public Set<Class<?>> getClasses(){
+    public MyApplication() {
+        packages(true, "rest.api", "application.filter");
+        //register(AuthenticationFilter.class);
         loadConfiguration();
-        Set<Class<?>> resources = new HashSet<Class<?>>();
-        resources.add(RecipeResource.class);
-        return resources;
     }
 
 }

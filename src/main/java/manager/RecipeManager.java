@@ -2,7 +2,7 @@ package manager;
 
 import exception.DatabaseException;
 import exception.InvalidUpdateException;
-import factory.database.ConnectionFactory;
+import factory.database.DataObjectFactory;
 import model.Recipe;
 import model.mapping.tables.records.RecipeRecord;
 import org.jooq.DSLContext;
@@ -27,7 +27,7 @@ public class RecipeManager {
     RecipeIngredientManager ingredientManager = new RecipeIngredientManager();
 
     public List<Recipe> getRecipes() throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<Recipe> recipeList = create.select().from(RECIPE).fetchInto(Recipe.class);
             attachRecipeInstruction(recipeList);
@@ -52,7 +52,7 @@ public class RecipeManager {
     }
 
     public Recipe getRecipeById(int recipeId) throws DatabaseException {
-        try(Connection connection = ConnectionFactory.getConnection()) {
+        try(Connection connection = DataObjectFactory.getDatabaseConnection()) {
             Recipe returnRecipe;
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             returnRecipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeId)).fetchAny().into(Recipe.class);
@@ -75,7 +75,7 @@ public class RecipeManager {
 
     public Recipe addRecipe(Recipe recipe) throws DatabaseException {
         Integer createdRecipeId;
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
             recipeRecord.store();
@@ -91,7 +91,7 @@ public class RecipeManager {
 
     public Recipe updateRecipe(Integer recipeId, Recipe recipeUpdate) throws DatabaseException, InvalidUpdateException {
         if (isValidRecipeUpdate(recipeId, recipeUpdate)) {
-            try (Connection connection = ConnectionFactory.getConnection()) {
+            try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
                 DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
                 RecipeRecord recipeRecord = create.newRecord(RECIPE, recipeUpdate);
                 create.batchUpdate(recipeRecord).execute();

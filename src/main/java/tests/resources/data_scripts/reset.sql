@@ -31,7 +31,8 @@ CREATE TABLE user (
   user_name VARCHAR(50) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  is_blocked BOOL NOT NULL DEFAULT FALSE,
+  authorization_token VARCHAR(225) UNIQUE DEFAULT NULL,
+  last_access INT UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id)
 );
 CREATE TABLE logging (
@@ -40,9 +41,3 @@ CREATE TABLE logging (
   exception VARCHAR(225) NOT NULL DEFAULT '',
   message VARCHAR(500) NOT NULL DEFAULT ''
 );
-CREATE TABLE user_attempt (
-  user_id INT UNIQUE NOT NULL,
-  attempt_number INT NOT NULL DEFAULT 0,
-  message VARCHAR(225) NOT NULL DEFAULT '',
-  session_id VARCHAR(225) UNIQUE NOT NULL
-)

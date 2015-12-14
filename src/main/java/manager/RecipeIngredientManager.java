@@ -1,7 +1,7 @@
 package manager;
 
 import exception.DatabaseException;
-import factory.database.ConnectionFactory;
+import factory.database.DataObjectFactory;
 import model.RecipeIngredient;
 import model.mapping.tables.records.RecipeIngredientRecord;
 import org.jooq.DSLContext;
@@ -22,7 +22,7 @@ import static model.mapping.tables.RecipeIngredientTable.RECIPE_INGREDIENT;
 public class RecipeIngredientManager {
 
     public List<RecipeIngredient> getRecipeIngredientByRecipeId(Integer recipeId) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             return create.select().from(RECIPE_INGREDIENT).where(RECIPE_INGREDIENT.RECIPE_ID.equal(recipeId)).fetchInto(RecipeIngredient.class);
         }
@@ -32,7 +32,7 @@ public class RecipeIngredientManager {
     }
 
     public void addRecipeIngredientList(Integer recipeId, List<RecipeIngredient> recipeIngredientList) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<RecipeIngredientRecord> ingredientRecordList = recipeIngredientList.stream()
                 .map(ingredient -> {
@@ -47,7 +47,7 @@ public class RecipeIngredientManager {
     }
 
     public void putRecipeIngredientList(List<RecipeIngredient> ingredientListUpdate) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<RecipeIngredientRecord> ingredientRecordList = ingredientListUpdate.stream()
                 .map(ingredient -> create.newRecord(RECIPE_INGREDIENT, ingredient))

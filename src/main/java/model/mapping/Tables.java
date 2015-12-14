@@ -10,7 +10,6 @@ import model.mapping.tables.LoggingTable;
 import model.mapping.tables.RecipeIngredientTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
-import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 
 
@@ -51,9 +50,4 @@ public class Tables {
 	 * The table vegan_kitchen_api.user
 	 */
 	public static final UserTable USER = model.mapping.tables.UserTable.USER;
-
-	/**
-	 * The table vegan_kitchen_api.user_attempt
-	 */
-	public static final UserAttemptTable USER_ATTEMPT = model.mapping.tables.UserAttemptTable.USER_ATTEMPT;
 }

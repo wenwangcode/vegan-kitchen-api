@@ -1,7 +1,7 @@
 package manager;
 
 import exception.DatabaseException;
-import factory.database.ConnectionFactory;
+import factory.database.DataObjectFactory;
 import model.RecipeInstruction;
 import model.mapping.tables.records.RecipeInstructionRecord;
 import org.jooq.DSLContext;
@@ -22,7 +22,7 @@ import static model.mapping.tables.RecipeInstructionTable.RECIPE_INSTRUCTION;
 public class RecipeInstructionManager {
 
     public List<RecipeInstruction> getRecipeInstructionListByRecipeId(Integer recipeId) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             return create.select().from(RECIPE_INSTRUCTION).where(RECIPE_INSTRUCTION.RECIPE_ID.equal(recipeId)).fetchInto(RecipeInstruction.class);
         }
@@ -32,7 +32,7 @@ public class RecipeInstructionManager {
     }
 
     public void addRecipeInstructionList(Integer recipeId, List<RecipeInstruction> instructionList) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<RecipeInstructionRecord> instructionRecordList = instructionList.stream()
                 .map(instruction -> {
@@ -47,7 +47,7 @@ public class RecipeInstructionManager {
     }
 
     public void putRecipeInstructionList(List<RecipeInstruction> instructionListUpdate) throws DatabaseException {
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
             List<RecipeInstructionRecord> instructionRecordList = instructionListUpdate.stream()
                 .map(instruction -> create.newRecord(RECIPE_INSTRUCTION, instruction))

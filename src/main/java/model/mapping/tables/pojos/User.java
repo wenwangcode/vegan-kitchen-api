@@ -4,9 +4,10 @@
 package model.mapping.tables.pojos;
 
 
-import java.io.Serializable;
+import org.jooq.types.UInteger;
 
 import javax.annotation.Generated;
+import java.io.Serializable;
 
 
 /**
@@ -22,13 +23,14 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 479400334;
+	private static final long serialVersionUID = -1182196150;
 
-	private Integer userId;
-	private String  userName;
-	private String  email;
-	private String  password;
-	private Byte    isBlocked;
+	private Integer  userId;
+	private String   userName;
+	private String   email;
+	private String   password;
+	private String   authorizationToken;
+	private UInteger lastAccess;
 
 	public User() {}
 
@@ -37,21 +39,24 @@ public class User implements Serializable {
 		this.userName = value.userName;
 		this.email = value.email;
 		this.password = value.password;
-		this.isBlocked = value.isBlocked;
+		this.authorizationToken = value.authorizationToken;
+		this.lastAccess = value.lastAccess;
 	}
 
 	public User(
-		Integer userId,
-		String  userName,
-		String  email,
-		String  password,
-		Byte    isBlocked
+		Integer  userId,
+		String   userName,
+		String   email,
+		String   password,
+		String   authorizationToken,
+		UInteger lastAccess
 	) {
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
-		this.isBlocked = isBlocked;
+		this.authorizationToken = authorizationToken;
+		this.lastAccess = lastAccess;
 	}
 
 	public Integer getUserId() {
@@ -86,12 +91,20 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Byte getIsBlocked() {
-		return this.isBlocked;
+	public String getAuthorizationToken() {
+		return this.authorizationToken;
 	}
 
-	public void setIsBlocked(Byte isBlocked) {
-		this.isBlocked = isBlocked;
+	public void setAuthorizationToken(String authorizationToken) {
+		this.authorizationToken = authorizationToken;
+	}
+
+	public UInteger getLastAccess() {
+		return this.lastAccess;
+	}
+
+	public void setLastAccess(UInteger lastAccess) {
+		this.lastAccess = lastAccess;
 	}
 
 	@Override
@@ -102,7 +115,8 @@ public class User implements Serializable {
 		sb.append(", ").append(userName);
 		sb.append(", ").append(email);
 		sb.append(", ").append(password);
-		sb.append(", ").append(isBlocked);
+		sb.append(", ").append(authorizationToken);
+		sb.append(", ").append(lastAccess);
 
 		sb.append(")");
 		return sb.toString();

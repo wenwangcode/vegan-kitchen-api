@@ -14,7 +14,6 @@ import model.mapping.tables.LoggingTable;
 import model.mapping.tables.RecipeIngredientTable;
 import model.mapping.tables.RecipeInstructionTable;
 import model.mapping.tables.RecipeTable;
-import model.mapping.tables.UserAttemptTable;
 import model.mapping.tables.UserTable;
 
 import org.jooq.Table;
@@ -34,7 +33,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class VeganKitchenApiSchema extends SchemaImpl {
 
-	private static final long serialVersionUID = -804548592;
+	private static final long serialVersionUID = 991244956;
 
 	/**
 	 * The reference instance of <code>vegan_kitchen_api</code>
@@ -61,7 +60,6 @@ public class VeganKitchenApiSchema extends SchemaImpl {
 			RecipeTable.RECIPE,
 			RecipeIngredientTable.RECIPE_INGREDIENT,
 			RecipeInstructionTable.RECIPE_INSTRUCTION,
-			UserTable.USER,
-			UserAttemptTable.USER_ATTEMPT);
+			UserTable.USER);
 	}
 }

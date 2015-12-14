@@ -2,76 +2,89 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.jooq.types.UInteger;
 
 /**
  * Created by wendywang on 2015-11-14.
  */
 public class User extends model.mapping.tables.pojos.User {
-    private Integer user_id;
-    private String email;
-    private String passcode;
-    private String username;
-    private Byte isBlocked;
 
     public User(){} //JAXB needs this
-    public User(Integer user_id, String email, String passcode, String username, Byte isBlocked){
-        this.user_id = user_id;
-        this.email = email;
-        this.passcode = passcode;
-        this.username = username;
-        this.isBlocked = isBlocked;
+
+    public User(Integer userId, String userName, String email, String password, String authorizationToken, UInteger lastAccess) {
+        super(userId, userName, email, password, authorizationToken, lastAccess);
     }
 
     @Override
-    @JsonIgnore
+    @JsonProperty("user_id")
     public Integer getUserId() {
-        return user_id;
+        return super.getUserId();
     }
+
     @Override
-    @JsonIgnore
-    public void setUserId(Integer user_id) {
-        this.user_id = user_id;
+    @JsonProperty("user_id")
+    public void setUserId(Integer userId) {
+        super.setUserId(userId);
     }
+
     @Override
     @JsonProperty("email")
     public String getEmail() {
-        return email;
+        return super.getEmail();
     }
+
     @Override
     @JsonProperty("email")
     public void setEmail(String email) {
-        this.email = email;
+        super.setEmail(email);
     }
+
     @Override
     @JsonProperty("username")
     public String getUserName() {
-        return username;
+        return super.getUserName();
     }
+
     @Override
     @JsonProperty("username")
-    public void setUserName(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        super.setUserName(userName);
     }
+
     @Override
     @JsonProperty("password")
     public String getPassword() {
-        return passcode;
+        return super.getPassword();
     }
+
     @Override
     @JsonProperty("password")
-    public void setPassword(String passcode) {
-        this.passcode = passcode;
+    public void setPassword(String password) {
+        super.setPassword(password);
     }
+
     @Override
-    @JsonProperty("isblocked")
-    public Byte getIsBlocked()
-    {
-        return isBlocked;
+    @JsonIgnore
+    public void setAuthorizationToken(String authorizationToken) {
+        super.setAuthorizationToken(authorizationToken);
     }
+
     @Override
-    @JsonProperty("isblocked")
-    public void setIsBlocked(Byte isBlocked)
-    {
-        this.isBlocked = isBlocked;
+    @JsonIgnore
+    public String getAuthorizationToken() {
+        return super.getAuthorizationToken();
     }
+
+    @Override
+    @JsonIgnore
+    public UInteger getLastAccess() {
+        return super.getLastAccess();
+    }
+
+    @Override
+    @JsonIgnore
+    public void setLastAccess(UInteger lastAccess) {
+        super.setLastAccess(lastAccess);
+    }
+
 }

@@ -1,7 +1,6 @@
 package manager;
 
-import factory.database.ConnectionFactory;
-import javafx.application.Application;
+import factory.database.DataObjectFactory;
 import model.ApplicationLogging;
 
 import java.sql.Connection;
@@ -18,7 +17,7 @@ public class ApplicationLoggingManager {
 
     public List<ApplicationLogging> getApplicationLogging(Connection con) throws SQLException {
         ArrayList<ApplicationLogging> applicationLoggings = new ArrayList<ApplicationLogging>();
-        try (Connection connection = ConnectionFactory.getConnection()) {
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM applicationLogging");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

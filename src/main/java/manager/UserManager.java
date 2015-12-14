@@ -1,143 +1,141 @@
 package manager;
 
-import factory.database.ConnectionFactory;
-import model.ApplicationLogging;
+import exception.DatabaseException;
+import exception.InvalidUserCreationException;
+import exception.SessionNotFoundException;
+import factory.database.DataObjectFactory;
 import model.User;
-import validator.UserValidator;
+import model.mapping.tables.records.UserRecord;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.exception.DataAccessException;
+import org.jooq.impl.DSL;
+import org.jooq.types.UInteger;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.math.BigInteger;
 import java.security.MessageDigest;
-import org.apache.catalina.session.ManagerBase;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static model.mapping.tables.UserTable.USER;
+
 /**
  * Created by wendywang on 2015-11-14.
  */
-public class UserManager extends ManagerBase{
+public class UserManager {
 
-    private User user;
-    private ApplicationLogging applicationLogging;
+    private final int MINIMUM_PASSWORD_LENGTH = 8;
+    private final int MAXIMUM_PASSWORD_LENGTH = 255;
+    private static SecureRandom secureRandom = new SecureRandom();
 
-    public UserManager()
-    {
-        user = new User();
-        applicationLogging = new ApplicationLogging();
-    }
-
-    public ArrayList<User> getUsers() throws Exception {
-        ArrayList<User> userArrayList = new ArrayList<User>();
-        try(Connection connection = ConnectionFactory.getConnection())
-        {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM user");
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
-                User userObj = new User();
-                userObj.setUserId(rs.getInt("user_id"));
-                userObj.setEmail(rs.getString("email"));
-                userObj.setPassword(rs.getString("password"));
-                userObj.setUserName(rs.getString("user_name"));
-                userArrayList.add(userObj);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return userArrayList;
-    }
-
-    /*
-    ** Update email
+    /**
+     * get user object based on user name and password
+     * @param userName : user name
+     * @param password : password
+     * @return user object
+     * @throws DatabaseException
      */
-    public void updateEmail(String email) throws Exception
-    {
-        if (email != null && this.isValidEmail(email))
-        {
-            user.setEmail(email);
-        }
-    }
-
-    /*
-    ** Update password
-     */
-    public void updatePassword(String password) throws Exception
-    {
-        if (password != null)
-        {
-            user.setPassword(password);
-        }
-    }
-
-    /*
-    ** determine whether the user is blocked or not
-     */
-    public boolean isBlocked() throws Exception
-    {
-        return false;
-    }
-
-    /*
-    ** source: http://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
-     */
-    public static boolean isValidEmail(String enteredEmail){
-        String EMAIL_REGIX = "^[\\\\w!#$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
-        Pattern pattern = Pattern.compile(EMAIL_REGIX);
-        Matcher matcher = pattern.matcher(enteredEmail);
-        return ((!enteredEmail.isEmpty()) && (enteredEmail!=null) && (matcher.matches()));
-    }
-
-    /*
-    ** Verify whether the email address is valid or not
-     */
-    public boolean verifyEmailAddress() throws Exception
-    {
-            String email = this.user.getEmail();
-            if (email == null) return false;
-            else
-            {
-                if (this.isValidEmail(email)) return true;
-                else return false;
-            }
-    }
-
-    /*
-    ** create a session id
-     */
-    public String createSessionId() throws Exception
-    {
-        String sessionId = super.generateSessionId();
-        this.applicationLogging.setSessionID(sessionId);
-        return sessionId;
-    }
-
-    /*
-    ** Create a new session
-     */
-    public org.apache.catalina.Session createSession(String sessionId) {
+    private User getUser(String userName, String password) throws DatabaseException {
         try {
-            sessionId = this.createSessionId();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Condition condition = USER.USER_NAME.equal(userName).and(USER.PASSWORD.equal(getEncryptPassword(password)));
+            return DataObjectFactory.getDataObject(USER, condition, User.class);
         }
-        return super.createSession(sessionId);
+        catch (NoSuchAlgorithmException exception) {
+            throw new DatabaseException("Unable access user data due to password encryption error.");
+        }
     }
 
-
-    @Override
-    public void load() throws ClassNotFoundException, IOException
-    {
-        /*
-        ** We only have one server, so do nothing
-         */
-        return;
+    /**
+     * create user account, password assumed to be encrypted
+     * @param user : new user to be created by user
+     */
+    public void createUser(User user) throws DatabaseException {
+        DataObjectFactory.storeDataObject(USER, user);
+        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
+            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
+            UserRecord userRecord = create.newRecord(USER, user);
+            userRecord.store();
+        }
+        catch (SQLException |DataAccessException |DatabaseException exception) {
+            throw new DatabaseException(DatabaseException.getDataRetrievalErrorMessage("failed insert new user into database."));
+        }
     }
 
-    @Override
-    public void unload() throws IOException {
-        return;
+    /**
+     * authenticate authorization token
+     * @param authorization : authorization token issued in user login
+     */
+    public void authenticateUser(String authorization) {
 
     }
+
+    /**
+     * encrypt password using MD5 (no decryption is required, password validation should be done using the encrypted password)
+     * @param password : un-encrypted password
+     * @return : encrypted password
+     * @throws NoSuchAlgorithmException
+     */
+    public String getEncryptPassword(String password) throws NoSuchAlgorithmException{
+        String encryptedPassword;
+        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+        messageDigest.reset();
+        byte[] passwordBytes = password.getBytes();
+        byte[] digestedPasswordBytes = messageDigest.digest(passwordBytes);
+        StringBuilder stringBuffer = new StringBuilder();
+        for (byte digestedPasswordByte : digestedPasswordBytes) {
+            stringBuffer.append(Integer.toHexString(0xff & digestedPasswordByte));
+        }
+        encryptedPassword = stringBuffer.toString();
+        return encryptedPassword;
+    }
+
+    /**
+     * create/update login session for user
+     * @param userName : user name supplied by user
+     * @param password : password supplied by user
+     * @return : authorization token
+     */
+    public String login(String userName, String password) throws DatabaseException{
+        // verity user name and password
+        User user = getUser(userName, password);
+        user.setAuthorizationToken(generateAuthorizationToken());
+        user.setLastAccess(UInteger.valueOf(System.currentTimeMillis() / 1000L));
+        return null;
+    }
+
+    /**
+     * end a login session
+     * @param authorization : authorization token of existing session
+     */
+    public void removeSession(String authorization) throws SessionNotFoundException {
+        // TODO
+    }
+
+    public void validateNewUser(User user) throws InvalidUserCreationException, DatabaseException {
+        if (!isEmail(user.getEmail())) {
+            throw new InvalidUserCreationException("invalid email format.");
+        }
+        else if (!isValidPassword(user.getPassword())) {
+            throw new InvalidUserCreationException("invalid password.");
+        }
+        else if (user.getUserId() != null) {
+            throw new InvalidUserCreationException("invalid attempt to supply user id for user creation.");
+        }
+    }
+
+    private boolean isEmail(String email) {
+        return email.toUpperCase().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$");
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() > MINIMUM_PASSWORD_LENGTH && password.length() < MAXIMUM_PASSWORD_LENGTH;
+    }
+
+    private String generateAuthorizationToken() {
+        return new BigInteger(130, secureRandom).toString(32);
+    }
+
 }
