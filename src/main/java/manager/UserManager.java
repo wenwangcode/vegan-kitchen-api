@@ -49,9 +49,13 @@ public class UserManager {
     }
 
     private User getUser(String authorizationToken) throws DatabaseException {
-        // TODO
-
-        return null;
+        try {
+            Condition condition = USER.AUTHORIZATION_TOKEN.equal(authorizationToken);
+            return DataObjectFactory.getDataObject(USER, condition, User.class);
+        }
+        catch (Exception exception) {
+            throw new DatabaseException("Unable access user data due unmatched authorization error.");
+        }
     }
 
     /**
