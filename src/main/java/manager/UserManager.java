@@ -48,6 +48,12 @@ public class UserManager {
         }
     }
 
+    private User getUser(String authorizationToken) throws DatabaseException {
+        // TODO
+
+        return null;
+    }
+
     /**
      * create user account, password assumed to be encrypted
      * @param user : new user to be created by user
@@ -103,15 +109,20 @@ public class UserManager {
         User user = getUser(userName, password);
         user.setAuthorizationToken(generateAuthorizationToken());
         user.setLastAccess(UInteger.valueOf(System.currentTimeMillis() / 1000L));
-        return null;
+        DataObjectFactory.storeDataObject(USER, user);
+        return user.getAuthorizationToken();
     }
 
     /**
      * end a login session
      * @param authorization : authorization token of existing session
      */
-    public void removeSession(String authorization) throws SessionNotFoundException {
+    public void logout(String authorization) throws SessionNotFoundException {
         // TODO
+        // user get user to verify authorization token
+        // set the current authorization token to empty string
+        // update last access time
+        // store the updated user object back into the database
     }
 
     public void validateNewUser(User user) throws InvalidUserCreationException, DatabaseException {

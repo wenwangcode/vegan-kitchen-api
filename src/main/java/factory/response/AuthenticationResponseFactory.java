@@ -45,4 +45,11 @@ public class AuthenticationResponseFactory extends ResponseFactory {
         }
         return response;
     }
+
+    public Response buildUserLogoutResponse(String authorizationToken) {
+        // TODO
+        // return NO_CONTENT status and inform the user that his/her session is finished if the authorization key is valid
+        // any exception means a BAD_REQUEST should be returned
+        return null;
+    }
 }

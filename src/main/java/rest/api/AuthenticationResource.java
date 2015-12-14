@@ -37,6 +37,7 @@ public class AuthenticationResource {
     @Path("logout")
     public Response logout(@HeaderParam("Authorization") String authorization) {
         // TODO
+        // build the correct response
         return null;
     }
 
