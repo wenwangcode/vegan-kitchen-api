@@ -4,14 +4,8 @@ import exception.DatabaseException;
 import exception.InvalidUpdateException;
 import factory.database.DataObjectFactory;
 import model.Recipe;
-import model.mapping.tables.records.RecipeRecord;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
 import org.jooq.exception.DataAccessException;
-import org.jooq.impl.DSL;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
@@ -27,16 +21,10 @@ public class RecipeManager {
     RecipeIngredientManager ingredientManager = new RecipeIngredientManager();
 
     public List<Recipe> getRecipes() throws DatabaseException {
-        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
-            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            List<Recipe> recipeList = create.select().from(RECIPE).fetchInto(Recipe.class);
-            attachRecipeInstruction(recipeList);
-            attachRecipeIngredient(recipeList);
-            return recipeList;
-        }
-        catch (SQLException|DataAccessException exception) {
-            throw new DatabaseException(DatabaseException.getDataRetrievalErrorMessage("failed to retrieve all recipes."));
-        }
+        List<Recipe> recipeList = DataObjectFactory.getDataObjectList(RECIPE, Recipe.class);
+        attachRecipeInstruction(recipeList);
+        attachRecipeIngredient(recipeList);
+        return recipeList;
     }
 
     private void attachRecipeInstruction(List<Recipe> recipeList) throws DatabaseException {
@@ -52,17 +40,10 @@ public class RecipeManager {
     }
 
     public Recipe getRecipeById(int recipeId) throws DatabaseException {
-        try(Connection connection = DataObjectFactory.getDatabaseConnection()) {
-            Recipe returnRecipe;
-            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            returnRecipe = create.select().from(RECIPE).where(RECIPE.RECIPE_ID.equal(recipeId)).fetchAny().into(Recipe.class);
-            attachRecipeInstruction(returnRecipe);
-            attachRecipeIngredient(returnRecipe);
-            return returnRecipe;
-        }
-        catch (SQLException|DataAccessException exception) {
-            throw new DatabaseException(DatabaseException.getDataRetrievalErrorMessage("failed to retrieve recipe by id."));
-        }
+        Recipe recipe = DataObjectFactory.getDataObject(RECIPE, RECIPE.RECIPE_ID.equal(recipeId), Recipe.class);
+        attachRecipeInstruction(recipe);
+        attachRecipeIngredient(recipe);
+        return recipe;
     }
 
     private void attachRecipeInstruction(Recipe recipe) throws DatabaseException {
@@ -74,33 +55,17 @@ public class RecipeManager {
     }
 
     public Recipe addRecipe(Recipe recipe) throws DatabaseException {
-        Integer createdRecipeId;
-        try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
-            DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-            RecipeRecord recipeRecord = create.newRecord(RECIPE, recipe);
-            recipeRecord.store();
-            createdRecipeId = recipeRecord.getRecipeId();
-            instructionManager.addRecipeInstructionList(createdRecipeId, recipe.getRecipeInstructionList());
-            ingredientManager.addRecipeIngredientList(createdRecipeId, recipe.getRecipeIngredientList());
-        }
-        catch (SQLException|DataAccessException exception) {
-            throw new DatabaseException(DatabaseException.getDataCreationErrorMessage("failed to add recipe."));
-        }
+        Integer createdRecipeId = DataObjectFactory.storeDataObject(RECIPE, recipe, RECIPE.RECIPE_ID);
+        instructionManager.addRecipeInstructionList(createdRecipeId, recipe.getRecipeInstructionList());
+        ingredientManager.addRecipeIngredientList(createdRecipeId, recipe.getRecipeIngredientList());
         return getRecipeById(createdRecipeId);
     }
 
     public Recipe updateRecipe(Integer recipeId, Recipe recipeUpdate) throws DatabaseException, InvalidUpdateException {
         if (isValidRecipeUpdate(recipeId, recipeUpdate)) {
-            try (Connection connection = DataObjectFactory.getDatabaseConnection()) {
-                DSLContext create = DSL.using(connection, SQLDialect.MYSQL);
-                RecipeRecord recipeRecord = create.newRecord(RECIPE, recipeUpdate);
-                create.batchUpdate(recipeRecord).execute();
-                instructionManager.putRecipeInstructionList(recipeUpdate.getRecipeInstructionList());
-                ingredientManager.putRecipeIngredientList(recipeUpdate.getRecipeIngredientList());
-            }
-            catch (SQLException|DataAccessException exception) {
-                throw new DatabaseException(DatabaseException.getDataUpdateErrorMessage("failed to update recipe."));
-            }
+            DataObjectFactory.updateDataObject(RECIPE, recipeUpdate);
+            instructionManager.putRecipeInstructionList(recipeUpdate.getRecipeInstructionList());
+            ingredientManager.putRecipeIngredientList(recipeUpdate.getRecipeIngredientList());
         }
         return getRecipeById(recipeId);
     }
